@@ -6,7 +6,7 @@ export function About() {
     <section
       id="about"
       aria-labelledby="about-title"
-      className="section-pad cv-auto border-y border-line bg-panel px-6 [--cv-h:1270px] md:[--cv-h:780px] lg:[--cv-h:680px]"
+      className="section-pad cv-auto border-y border-line bg-panel px-6 [--cv-h:1215px] md:[--cv-h:750px] lg:[--cv-h:680px]"
     >
       <div className="mx-auto grid max-w-[1200px] grid-cols-[repeat(auto-fit,minmax(min(320px,100%),1fr))] items-center gap-14">
         <div className="relative">

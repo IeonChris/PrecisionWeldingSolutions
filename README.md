@@ -1,6 +1,6 @@
 # Precision Welding Solutions
 
-One-page marketing site for Precision Welding Solutions: welding, fabrication and machining on Reece Rd, St. Thomas, Barbados. The goal of every section is to get a visitor to send Kris a photo of the part on WhatsApp, or to request a quote.
+One-page marketing site for Precision Welding Solutions: welding and fabrication on Reece Rd, St. Thomas, Barbados. The goal of every section is to get a visitor to send Kris a photo of the part on WhatsApp, or to request a quote.
 
 The approved design is `design_handoff/Precision Welding Solutions.dc.html` (spec: `design_handoff/README.md`). It is kept for reference and is not part of the build.
 
@@ -31,7 +31,7 @@ npm run instagram:refresh   # rotate a long-lived Instagram token (Option B belo
 
 ## Changing copy and photos
 
-**Everything the visitor reads lives in `src/content.ts`**: phone, WhatsApp and Instagram links, address, hours, every heading and paragraph, the seven services, the four reasons, the form's service list, the Instagram fallback posts, and every photo.
+**Everything the visitor reads lives in `src/content.ts`**: phone, WhatsApp and Instagram links, address, hours, every heading and paragraph, the six services, the four reasons, the form's service list, the Instagram fallback posts, every photo and the hero video.
 
 To swap a photo:
 
@@ -39,14 +39,37 @@ To swap a photo:
 2. Change that image's `src` in `images` in `src/content.ts`. Adjust `position` (CSS `object-position`) if the crop needs to move.
 3. Set `src: null` to show the dark captioned placeholder instead.
 
-| Slot | Current file | What it should be |
-| --- | --- | --- |
-| `hero` | `hero-welder.jpg` | Wide, dark shot of Kris welding with sparks. At least 1920px wide; keep the left half quiet for the headline |
-| `servicesBg`, `whyBg`, `contactBg` | `weld-bg.jpg` | Workshop shot that stays fixed while the text scrolls over it. At least 1920px wide |
-| `about` | `workshop-grinder.jpg` | Portrait (4:5) of Kris at the bench or lathe. At least 900 × 1125 |
-| `logo` | `logo.png` | The logo on black (used for the round avatars, the email header and structured data) |
+All photos are Kris's own (sent over WhatsApp, which strips location data).
 
-> **Before launch:** `hero-welder.jpg`, `weld-bg.jpg` and `workshop-grinder.jpg` are Getty Images previews used as placeholders. They must be licensed or replaced with the client's own photos. The About photo in particular should be Kris, since the name plate says so.
+| Slot | Current file | What it is |
+| --- | --- | --- |
+| `hero` | `hero-cutting-poster.jpg` | First frame of the hero video. Shows instantly, and on its own when the video can't play |
+| `servicesBg`, `contactBg` | `ibeam-weld.jpg` | Stick-welding a steel I-beam on site. Fixed behind the text; each slot frames it differently with `position` |
+| `whyBg` | `boat-rail-weld.jpg` | TIG-welding a rail mount on a fishing boat |
+| `about` | `kris-marina.jpg` | Kris on a marina dock with his TIG torch (4:5 crop) |
+| `share` | `og-cutting.jpg` | Photo half of the link-preview card |
+| `logo` | `logo.png` | The logo on black (round avatars, email header, structured data) |
+
+Better originals help: WhatsApp compresses photos to 1500×2000 and video to ~480p. Ask Kris to send files as a **Document** (attach → Document) to keep full resolution.
+
+## Hero video
+
+`public/media/hero-cutting.mp4` is a silent 6-second loop of Kris torch-cutting (1 MB, H.264). It is configured in `heroVideo` in `src/content.ts` and played by `src/components/HeroMedia.tsx`, which:
+
+- starts it only after the page has loaded (the poster photo is what loads first);
+- pauses it while the hero is scrolled out of view;
+- never plays it under "reduce motion" or Data Saver (the poster stays);
+- shows a pause/play button, which accessibility rules require for motion longer than five seconds.
+
+The clip is portrait (478×850), so on desktop it fills the right half of the hero and fades into the black behind the headline (`desktopLayout: "panel"`); phones show it full-screen. With a landscape clip at least 1920px wide, set `desktopLayout: "full"`. Set `heroVideo` to `null` to use the photo alone.
+
+To make a new loop from a phone video (ffmpeg): trim to a stretch with continuous action, drop the audio, crossfade the end into the start so it loops without a jump, and keep it near 1 MB:
+
+```bash
+ffmpeg -i input.mp4 -filter_complex "[0:v]split=2[a][b];[a]trim=start=2.8:end=9.0,setpts=PTS-STARTPTS,fps=24,settb=AVTB[body];[b]trim=start=2.0:end=2.8,setpts=PTS-STARTPTS,fps=24,settb=AVTB[head];[body][head]xfade=transition=fade:duration=0.8:offset=5.4,hqdn3d=4:3:9:7,format=yuv420p[v]" -map "[v]" -an -c:v libx264 -preset veryslow -crf 30 -movflags +faststart public/media/hero-cutting.mp4
+```
+
+(`trim` picks the stretch: the loop runs from 2.8s to 9.0s and the 2.0–2.8s head is blended into its end; `offset` = loop length − crossfade.) Then export its first frame as the poster in `public/images/`.
 
 ## Instagram feed (#work)
 
@@ -101,7 +124,7 @@ Copy `.env.local.example` to `.env.local` for local development and add the same
 
 - `src/app/layout.tsx`: title, description, canonical, Open Graph and Twitter tags, and `LocalBusiness` JSON-LD (address, geo from the Google Maps plus code 5C42+G6, Sunday 08:00–13:00 hours, Instagram `sameAs`).
 - `src/app/page.tsx`: the services as `ItemList` and `Service` + `OfferCatalog` JSON-LD.
-- `src/app/opengraph-image.tsx`: branded 1200×630 share card rendered on the edge.
+- `src/app/opengraph-image.tsx`: branded 1200×630 share card (spark photo, logo, headline, WhatsApp number). It renders once at build time on Node and is re-encoded as a ~70 KB JPEG, because WhatsApp silently drops link-preview images over ~300 KB; a photo card as PNG is ~650 KB.
 - `src/app/sitemap.ts`, `src/app/robots.ts`: one URL; `/admin` and `/api/` disallowed.
 - `GET /api/seo/ping?token=PING_SECRET` (or `Authorization: Bearer …`) pings Google and Bing with the sitemap. Google retired its ping endpoint in 2023 and answers 404, so also submit `/sitemap.xml` once in Google Search Console.
 - Structured-data helpers (`createMetadata`, `createServiceSchema`, `createBreadcrumbSchema`, …) are in `src/lib/metadata.ts`.
@@ -121,7 +144,7 @@ Copy `.env.local.example` to `.env.local` for local development and add the same
 
 ### Measuring performance locally
 
-Local Lighthouse runs on this machine under-report mobile performance. Chrome here records each response's decompressed size as its transfer size, so Lighthouse's simulated throttling treats the gzipped page as uncompressed (about 5× larger). Measured with DevTools throttling instead (`--throttling-method=devtools`), the production build scores 96 performance / 97 accessibility / 100 best practices / 100 SEO on mobile. Confirm on the deployed URL with PageSpeed Insights.
+Local Lighthouse runs on this machine under-report mobile performance. Chrome here records each response's decompressed size as its transfer size, so Lighthouse's simulated throttling treats the gzipped page as uncompressed (about 5× larger). Measured with DevTools throttling instead (`--throttling-method=devtools`), the production build scored 96 performance / 97 accessibility / 100 best practices / 100 SEO on mobile (2026-09-28). Results also swing with whatever else the machine is running: on a busy day the same build scored 44–63, so compare versions side by side in one session rather than against an old number, and confirm on the deployed URL with PageSpeed Insights.
 
 ## Design notes
 

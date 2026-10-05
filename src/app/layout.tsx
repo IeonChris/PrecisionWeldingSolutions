@@ -22,14 +22,13 @@ const openSans = Open_Sans({
 
 export const metadata: Metadata = {
   ...createMetadata({
-    title: "Precision Welding Solutions | Welding, Fabrication & Machining in Barbados",
+    title: "Precision Welding Solutions | Welding & Fabrication in Barbados",
     description: business.description,
   }),
   keywords: [
     "welding Barbados",
     "aluminum welding",
     "fabrication",
-    "machining",
     "thread repair",
     "glow plug removal",
     "St. Thomas",

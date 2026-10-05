@@ -273,6 +273,27 @@
   contain-intrinsic-height: auto var(--cv-h, 900px);
 }
 
+/* ---------- Hero media ---------- */
+
+/*
+ * Phones: the photo/clip fills the hero under a top-to-bottom scrim so the headline stays legible.
+ * From 768px: the design's left-to-right scrim, and (with heroVideo.desktopLayout "panel") the
+ * media sits in the right half, fading into the black behind the headline.
+ */
+@utility hero-fade {
+  @media (min-width: 48rem) {
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 40%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 40%);
+  }
+}
+
+@utility hero-scrim {
+  background: linear-gradient(180deg, rgba(10, 11, 13, 0.5) 0%, rgba(10, 11, 13, 0.62) 40%, rgba(10, 11, 13, 0.9) 100%);
+  @media (min-width: 48rem) {
+    background: linear-gradient(90deg, rgba(10, 11, 13, 0.96) 0%, rgba(10, 11, 13, 0.75) 50%, rgba(10, 11, 13, 0.2) 100%);
+  }
+}
+
 /* ---------- Form fields ---------- */
 
 /* 12px 14px padding + normal line-height = the design's 46px field (44px+ touch target on phones). */

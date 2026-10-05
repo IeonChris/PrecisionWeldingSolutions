@@ -8,7 +8,7 @@ export function Services() {
       labelledBy="services-title"
       image={images.servicesBg}
       scrim="linear-gradient(180deg,rgba(10,11,13,.78),rgba(10,11,13,.66) 50%,rgba(10,11,13,.78))"
-      contentClassName="cv-auto [--cv-h:2200px] md:[--cv-h:1380px] lg:[--cv-h:1190px]"
+      contentClassName="cv-auto [--cv-h:2000px] md:[--cv-h:1400px] lg:[--cv-h:1190px]"
     >
       <div className="container-site pt-[72px] pb-20 text-center md:pt-[110px] md:pb-[120px]">
         <p className="eyebrow m-0 mb-3">{servicesIntro.eyebrow}</p>
@@ -29,7 +29,8 @@ export function Services() {
               <p className="m-0 text-[12px] tracking-[0.16em] text-dim uppercase">{s.tags}</p>
             </li>
           ))}
-          <li className="flex flex-col items-center justify-center gap-[14px] border border-[rgba(59,157,255,0.5)] px-6 py-7">
+          {/* Own row, centred, one card wide: a six-service grid leaves it alone on the last row. */}
+          <li className="col-span-full mx-auto flex w-full max-w-[373px] flex-col items-center justify-center gap-[14px] border border-[rgba(59,157,255,0.5)] px-6 py-7">
             <h3 className="m-0 font-display text-[22px] leading-[1.1] font-extrabold text-white uppercase">
               {servicesIntro.cta.title}
             </h3>

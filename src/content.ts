@@ -21,7 +21,7 @@ export const business = {
   name: "Precision Welding Solutions",
   shortName: "Precision Welding",
   description:
-    "Welding, fabrication and machining in St. Thomas, Barbados. Thread repairs, seized glow and spark plug removal, aluminum TIG welding, custom fabrication, machining and on-site repairs.",
+    "Welding and fabrication in St. Thomas, Barbados. Thread repairs, seized glow and spark plug removal, aluminum TIG welding, custom fabrication and on-site repairs.",
   owner: "Kris",
   /** Production domain. NEXT_PUBLIC_SITE_URL overrides it. Placeholder until the domain is chosen. */
   url: "https://precision-welding-solutions.vercel.app",
@@ -66,36 +66,53 @@ export const images = {
     placeholder: "Logo",
   },
   hero: {
-    // Getty preview (placeholder). Must be licensed or replaced with Kris's own photo before launch.
-    src: "/images/hero-welder.jpg",
-    alt: "Welder in a helmet laying a bead, sparks flying across the bench",
+    // First frame of the hero video (`heroVideo` below): shown instantly, and on its own when motion is off.
+    src: "/images/hero-cutting-poster.jpg",
+    alt: "Kris cutting steel with a torch in the shop, sparks pouring onto the floor",
     placeholder: "Drop a wide shot of Kris welding (sparks, dark background)",
-    position: "70% 50%",
+    position: "40% 45%",
   },
   servicesBg: {
-    // Getty preview (placeholder), same photo as the design's weld-bg.png.
-    src: "/images/weld-bg.jpg",
+    src: "/images/ibeam-weld.jpg",
     alt: "",
     placeholder: "Wide workshop shot: welder in helmet, sparks (stays fixed while text scrolls)",
+    position: "50% 12%",
   },
   about: {
-    // Getty preview (placeholder). Replace with a photo of Kris at the bench or lathe.
-    src: "/images/workshop-grinder.jpg",
-    alt: "Cutting steel with an angle grinder in the workshop",
-    placeholder: "Photo of Kris at the bench / lathe",
-    position: "62% 50%",
+    src: "/images/kris-marina.jpg",
+    alt: "Kris on a marina dock with his TIG torch, beside the aluminum frame he is welding",
+    placeholder: "Photo of Kris at work",
   },
   whyBg: {
-    src: "/images/weld-bg.jpg",
+    src: "/images/boat-rail-weld.jpg",
     alt: "",
     placeholder: "Background photo",
+    position: "50% 30%",
   },
   contactBg: {
-    src: "/images/weld-bg.jpg",
+    src: "/images/ibeam-weld.jpg",
     alt: "",
     placeholder: "Background photo",
+    position: "50% 55%",
+  },
+  /** Photo half of the link-preview card (src/app/opengraph-image.tsx). */
+  share: {
+    src: "/images/og-cutting.jpg",
+    alt: "",
+    placeholder: "Share card photo",
   },
 } satisfies Record<string, SiteImage>;
+
+/**
+ * Silent looping clip behind the hero, played after the page has loaded (never under
+ * reduced motion or Data Saver; `images.hero` shows instead). Set to null for the photo alone.
+ * `desktopLayout`: "panel" keeps a portrait clip in the right half of the hero on desktop,
+ * fading into the black behind the headline; use "full" for a landscape clip (1920px+ wide).
+ */
+export const heroVideo: { src: string; desktopLayout: "panel" | "full" } | null = {
+  src: "/media/hero-cutting.mp4",
+  desktopLayout: "panel",
+};
 
 /* ---------- Navigation ---------- */
 
@@ -121,7 +138,7 @@ export const hero = {
   eyebrow: "St. Thomas, Barbados",
   titleLines: ["Precision welding.", "Clean. Strong."],
   titleAccent: "Exact.",
-  sub: "Thread repairs, plug extraction, aluminum welding, fabrication and machining.",
+  sub: "Thread repairs, plug extraction, aluminum welding and fabrication.",
   secondaryCta: { href: "#work", label: "See recent work" },
 } as const;
 
@@ -129,8 +146,8 @@ export const hero = {
 
 export const intro = {
   eyebrow: "Precision Welding Solutions",
-  title: "Welding, fabrication and machining under one roof in St. Thomas",
-  body: "Run by Kris, a fabricator, welder and machinist with 20 years of experience. From seized glow plugs to full custom frames, every job leaves the shop back to spec.",
+  title: "Welding and fabrication under one roof in St. Thomas",
+  body: "Run by Kris, a welder and fabricator with 20 years of experience. From seized glow plugs to full custom frames, every job leaves the shop back to spec.",
   stat: { value: "20+", label: "Years experience" },
   pillars: ["Stronger connections", "Quality work", "Lasting solutions"],
 } as const;
@@ -176,18 +193,12 @@ export const services = [
   },
   {
     num: "05",
-    title: "Machining",
-    desc: "Turning, facing, boring and bushings. Parts made to fit when off-the-shelf won't.",
-    tags: "Lathe · Fit · Tolerance",
-  },
-  {
-    num: "06",
     title: "Flange & exhaust work",
     desc: "V-band conversions, flange changes, broken exhaust ears and manifold repairs.",
     tags: "V-band · Manifold · Repair",
   },
   {
-    num: "07",
+    num: "06",
     title: "Mobile / on-site",
     desc: "Can't bring it in? On-site welding and repair across Barbados for equipment, gates and structures.",
     tags: "Island-wide · By arrangement",
@@ -198,18 +209,18 @@ export const services = [
 
 export const about = {
   eyebrow: "About",
-  title: "Fabricator, welder and machinist. One shop, one standard.",
+  title: "Welder and fabricator. One shop, one standard.",
   paragraphs: [
-    "Precision Welding Solutions is run by Kris, a fabricator, welder and machinist with over 20 years of experience, working out of Reece Rd, St. Thomas. Most jobs that come through the door are things other shops turned away: seized glow plugs, stripped threads, snapped studs, cracked aluminum housings.",
-    "Having machining and welding under one roof means a repair isn't just patched. It's brought back to spec.",
+    "Precision Welding Solutions is run by Kris, a welder and fabricator with over 20 years of experience, working out of Reece Rd, St. Thomas. Most jobs that come through the door are things other shops turned away: seized glow plugs, stripped threads, snapped studs, cracked aluminum housings.",
+    "Having welding and fabrication under one roof means a repair isn't just patched. It's brought back to spec.",
   ],
   points: [
-    "Welding + machining in one shop",
+    "Welding + fabrication in one shop",
     "Steel, stainless & aluminum",
     "Straight answers, honest pricing",
     "Photos quoted over WhatsApp",
   ],
-  nameplate: { name: "Kris", role: "Owner · Machinist" },
+  nameplate: { name: "Kris", role: "Owner · Welder" },
   cta: "Talk to Kris",
 } as const;
 
@@ -299,7 +310,6 @@ export const serviceOptions = [
   "Glow / spark plug removal",
   "Aluminum welding",
   "Fabrication",
-  "Machining",
   "Flange / exhaust work",
   "On-site service",
   "Something else",
@@ -309,6 +319,6 @@ export const serviceOptions = [
 
 export const footer = {
   blurb:
-    "Welding, fabrication and machining in Barbados. 20+ years of stronger connections, quality work and lasting solutions.",
+    "Welding and fabrication in Barbados. 20+ years of stronger connections, quality work and lasting solutions.",
   serving: "Serving St. Thomas, Bridgetown & All of Barbados",
 } as const;

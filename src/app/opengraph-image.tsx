@@ -1,19 +1,23 @@
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 import { ImageResponse } from "next/og";
-import { business } from "@/content";
-import { baseUrl } from "@/lib/metadata";
+import sharp from "sharp";
+import { business, images } from "@/content";
 
-export const runtime = "edge";
-export const alt = "Precision Welding Solutions: welding, fabrication and machining in St. Thomas, Barbados";
+/*
+ * Rendered once at build time on Node (not the edge) so the card can be re-encoded as JPEG:
+ * WhatsApp silently drops link-preview images over ~300 KB, and a photo card as PNG is ~650 KB.
+ * Assets are read from /public directly, so no absolute URLs are needed.
+ */
+export const dynamic = "force-static";
+export const alt = "Precision Welding Solutions: welding and fabrication in St. Thomas, Barbados";
 export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+export const contentType = "image/jpeg";
 
-// Absolute logo URL: the dev server locally, the public site in production.
-const logoUrl =
-  process.env.NODE_ENV === "development" ? "http://localhost:3000/images/logo.png" : `${baseUrl}/images/logo.png`;
-
-const HEADLINE = ["Precision welding.", "Clean. Strong.", "Exact."];
+const HEADLINE = ["Precision", "welding.", "Clean. Strong."];
+const ACCENT = "Exact.";
 const EYEBROW = "St. Thomas, Barbados";
-const SERVICES = "Welding · Fabrication · Machining";
+const SERVICES = "Welding · Fabrication · Repairs";
 const CTA = `WhatsApp ${business.phone.display}`;
 
 /** Fetches a Google Font as TTF, subset to the characters actually drawn. */
@@ -30,22 +34,26 @@ async function googleFont(family: string, weight: number, text: string): Promise
   }
 }
 
-async function loadLogo(): Promise<ArrayBuffer | null> {
+/** A /public image as a data URI for Satori, or null if it's missing. */
+async function publicImage(src: string | null): Promise<string | null> {
+  if (!src) return null;
   try {
-    const res = await fetch(logoUrl);
-    return res.ok ? await res.arrayBuffer() : null;
+    const file = await readFile(path.join(process.cwd(), "public", src));
+    const type = src.endsWith(".png") ? "image/png" : "image/jpeg";
+    return `data:${type};base64,${file.toString("base64")}`;
   } catch {
     return null;
   }
 }
 
-/** Branded 1200×630 card: logo left, the hero line right, on the site's black with a blue glow. */
+/** Branded 1200×630 card: Kris's spark shower on the left fading into black, logo and hero line on the right. */
 export default async function OpenGraphImage() {
-  const displayText = [...HEADLINE, EYEBROW, SERVICES].join(" ").toUpperCase();
-  const [logo, montserrat, openSans] = await Promise.all([
-    loadLogo(),
+  const displayText = [...HEADLINE, ACCENT, EYEBROW, SERVICES].join(" ").toUpperCase();
+  const [logo, photo, montserrat, openSans] = await Promise.all([
+    publicImage(images.logo.src),
+    publicImage(images.share.src),
     googleFont("Montserrat", 800, displayText),
-    googleFont("Open+Sans", 600, `${CTA}${SERVICES}`),
+    googleFont("Open+Sans", 600, CTA),
   ]);
 
   const fonts = [
@@ -53,43 +61,55 @@ export default async function OpenGraphImage() {
     ...(openSans ? [{ name: "Open Sans", data: openSans, weight: 600 as const, style: "normal" as const }] : []),
   ];
 
-  return new ImageResponse(
+  const png = new ImageResponse(
     (
       <div
         style={{
           width: "100%",
           height: "100%",
           display: "flex",
-          alignItems: "center",
-          gap: 56,
-          padding: "0 72px 0 56px",
           backgroundColor: "#0a0b0d",
-          backgroundImage:
-            "radial-gradient(640px 420px at 22% 50%, rgba(30,127,224,0.30), transparent 70%), radial-gradient(900px 520px at 100% 0%, rgba(59,157,255,0.14), transparent 70%)",
+          backgroundImage: "radial-gradient(900px 520px at 100% 0%, rgba(59,157,255,0.14), transparent 70%)",
           color: "#e6e9ed",
           fontFamily: "Open Sans",
         }}
       >
-        {logo ? (
-          // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
-          <img src={logo as unknown as string} width={420} height={420} style={{ borderRadius: 24 }} />
-        ) : (
-          <div style={{ display: "flex", width: 420, height: 420 }} />
-        )}
+        <div style={{ display: "flex", position: "relative", width: 480, height: 630 }}>
+          {photo ? (
+            // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
+            <img src={photo} width={480} height={630} style={{ objectFit: "cover" }} />
+          ) : null}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              width: 220,
+              height: 630,
+              backgroundImage: "linear-gradient(90deg, rgba(10,11,13,0), #0a0b0d)",
+            }}
+          />
+        </div>
 
-        <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 26 }}>
-            <div style={{ width: 40, height: 3, background: "#3b9dff" }} />
-            <div
-              style={{
-                fontFamily: "Montserrat",
-                fontSize: 20,
-                letterSpacing: "0.22em",
-                color: "#3b9dff",
-                textTransform: "uppercase",
-              }}
-            >
-              {EYEBROW}
+        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", flex: 1, padding: "0 64px 0 28px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 18, marginBottom: 28 }}>
+            {logo ? (
+              // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
+              <img src={logo} width={84} height={84} style={{ borderRadius: 84, border: "2px solid #1e7fe0" }} />
+            ) : null}
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <div style={{ width: 32, height: 3, background: "#3b9dff" }} />
+              <div
+                style={{
+                  fontFamily: "Montserrat",
+                  fontSize: 19,
+                  letterSpacing: "0.22em",
+                  color: "#3b9dff",
+                  textTransform: "uppercase",
+                }}
+              >
+                {EYEBROW}
+              </div>
             </div>
           </div>
           <div
@@ -97,22 +117,23 @@ export default async function OpenGraphImage() {
               display: "flex",
               flexDirection: "column",
               fontFamily: "Montserrat",
-              fontSize: 66,
+              fontSize: 60,
               lineHeight: 0.98,
               letterSpacing: "-0.02em",
               textTransform: "uppercase",
             }}
           >
-            <span>{HEADLINE[0]}</span>
-            <span>{HEADLINE[1]}</span>
-            <span style={{ color: "#3b9dff" }}>{HEADLINE[2]}</span>
+            {HEADLINE.map((line) => (
+              <span key={line}>{line}</span>
+            ))}
+            <span style={{ color: "#3b9dff" }}>{ACCENT}</span>
           </div>
           <div
             style={{
               display: "flex",
-              marginTop: 30,
+              marginTop: 28,
               fontFamily: "Montserrat",
-              fontSize: 20,
+              fontSize: 18,
               letterSpacing: "0.16em",
               color: "#8b95a1",
               textTransform: "uppercase",
@@ -126,11 +147,11 @@ export default async function OpenGraphImage() {
               alignSelf: "flex-start",
               alignItems: "center",
               gap: 12,
-              marginTop: 34,
-              padding: "16px 26px",
+              marginTop: 30,
+              padding: "15px 24px",
               background: "#1e7fe0",
               borderRadius: 6,
-              fontSize: 26,
+              fontSize: 24,
               color: "#ffffff",
             }}
           >
@@ -142,4 +163,9 @@ export default async function OpenGraphImage() {
     ),
     { ...size, fonts },
   );
+
+  const jpeg = await sharp(Buffer.from(await png.arrayBuffer()))
+    .jpeg({ quality: 82, mozjpeg: true })
+    .toBuffer();
+  return new Response(new Uint8Array(jpeg), { headers: { "Content-Type": contentType } });
 }

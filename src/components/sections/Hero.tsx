@@ -1,15 +1,21 @@
-import { business, hero, images } from "@/content";
+import { business, hero, heroVideo, images } from "@/content";
 import { SiteImage } from "@/components/SiteImage";
+import { HeroMedia } from "@/components/HeroMedia";
 
 export function Hero() {
+  const panel = heroVideo?.desktopLayout === "panel";
   return (
-    <section aria-labelledby="hero-title" className="relative flex min-h-[640px] items-end overflow-hidden">
-      <div className="absolute inset-0 bg-slot">
-        <SiteImage image={images.hero} sizes="100vw" priority />
-      </div>
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(10,11,13,0.96)_0%,rgba(10,11,13,0.75)_50%,rgba(10,11,13,0.2)_100%)]"
+    <section aria-labelledby="hero-title" className="relative flex min-h-[640px] items-end overflow-hidden bg-base">
+      <HeroMedia
+        video={heroVideo}
+        position={images.hero.position}
+        poster={
+          <SiteImage
+            image={images.hero}
+            sizes={panel ? "(min-width: 1584px) 760px, (min-width: 768px) 48vw, 100vw" : "100vw"}
+            priority
+          />
+        }
       />
       {/* The design's hero container is border-box, so its content sits 24px further in than other sections. */}
       <div className="relative mx-auto w-full max-w-[1200px] px-6 pt-[120px] pb-16 sm:pb-20">
