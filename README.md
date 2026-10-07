@@ -11,7 +11,7 @@ The approved design is the v3 redesign, `design_handoff/Redesign v3.dc.html`. Th
 | Framework | Next.js 15 (App Router), TypeScript, React 19 |
 | Styling | Tailwind CSS v4. The design tokens in `src/app/globals.css` are the only colours; Tailwind's default palette is disabled |
 | Fonts | Montserrat (headings) and Open Sans (body) from Google Fonts through `next/font`, self-hosted at build time with `display: swap` |
-| Page | `/` is static and regenerated at most hourly (ISR) so the Instagram grid stays fresh |
+| Page | `/` is static and regenerated at most every 3 hours (ISR) so the Instagram grid stays fresh |
 | Form | Server action (`src/app/actions/quote.ts`): zod validation, honeypot, per-IP rate limit, email to the owner through Resend with a React Email template |
 | Hosting | Vercel |
 
@@ -76,13 +76,15 @@ ffmpeg -i input.mp4 -filter_complex "[0:v]split=2[a][b];[a]trim=start=2.8:end=9.
 
 ## Instagram feed (#work)
 
-The grid shows the six latest posts. Each tile links to the post, shows a play badge on videos and the first line of the caption (hashtags removed). Posts are fetched on the server and cached for an hour. With no feed configured, or if the feed fails, the six captions in `instagramFallbackPosts` (`src/content.ts`) are shown as dark placeholders.
+The grid shows the six latest posts. Each tile links to the post, shows a play badge on videos and the first line of the caption (hashtags removed) on a dark strip; posts without a caption show just the picture. Posts are fetched on the server and cached for 3 hours (`INSTAGRAM_REVALIDATE_SECONDS` in `src/lib/instagram.ts`, kept in step with `revalidate` in `src/app/page.tsx`). With no feed configured, or if the feed fails, the six captions in `instagramFallbackPosts` (`src/content.ts`) are shown as dark placeholders.
 
 **Option A: Behold (recommended, no upkeep).**
 
 1. Create a free account at [behold.so](https://behold.so) and connect @precision_weldingsolutions.
 2. Create a feed, choose **JSON** as the output, and copy the feed URL (`https://feeds.behold.so/…`).
 3. Set `INSTAGRAM_FEED_URL` to that URL. Behold handles Instagram's token refreshes.
+
+Behold's free plan updates the feed once a day, returns up to six posts, and allows 1,200 feed requests a month (every request to the JSON URL counts; images don't). Asking every 3 hours uses at most ~250 of them. On a paid plan with hourly updates, lower both refresh values to `3600`.
 
 **Option B: Instagram API directly.**
 

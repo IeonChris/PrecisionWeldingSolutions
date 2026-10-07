@@ -10,7 +10,7 @@ import { business, instagramFallbackPosts } from "@/content";
  *                              Expires after 60 days unless refreshed: see `npm run instagram:refresh`.
  * Anything missing or failing falls back to `instagramFallbackPosts` in src/content.ts.
  *
- * Requests are cached by Next and re-fetched at most once an hour (ISR).
+ * Requests are cached by Next and re-fetched at most every INSTAGRAM_REVALIDATE_SECONDS (ISR).
  */
 
 export interface FeedPost {
@@ -25,7 +25,12 @@ export interface FeedPost {
 
 export type FeedSource = "behold" | "instagram" | "fallback";
 
-export const INSTAGRAM_REVALIDATE_SECONDS = 3600;
+/**
+ * Behold's free plan updates the feed once a day and allows 1,200 feed requests a month, so asking every
+ * 3 hours (at most ~250 requests a month) keeps the grid current with room to spare. Keep `revalidate`
+ * in src/app/page.tsx in step (Next needs a literal there).
+ */
+export const INSTAGRAM_REVALIDATE_SECONDS = 10800;
 const GRAPH_API = "https://graph.instagram.com/v25.0";
 const LIMIT = 6;
 
@@ -87,10 +92,12 @@ interface BeholdPost {
   sizes?: Partial<Record<"small" | "medium" | "large" | "full", BeholdSize>>;
 }
 
-/** Smallest Behold rendition that is still sharp on a ~200px tile at 2x. */
+/** Smallest Behold rendition still sharp on a ~200px square tile at 2x. Tiles crop to the shorter side. */
 function beholdImage(p: BeholdPost): string | null {
   const sizes = p.sizes ?? {};
-  const pick = [sizes.small, sizes.medium, sizes.large, sizes.full].find((s) => s && s.width >= 400) ?? sizes.full;
+  const pick =
+    [sizes.small, sizes.medium, sizes.large, sizes.full].find((s) => s && Math.min(s.width, s.height) >= 400) ??
+    sizes.full;
   return pick?.mediaUrl ?? (p.mediaType === "VIDEO" ? p.thumbnailUrl : p.mediaUrl) ?? null;
 }
 

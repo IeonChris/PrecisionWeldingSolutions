@@ -295,6 +295,8 @@ export const reasons: {
 export const instagramIntro = {
   eyebrow: "Latest from Instagram",
   button: "Follow on Instagram",
+  /** Screen-reader name of each tile, followed by the caption when the post has one. */
+  postLabel: "Instagram post",
 } as const;
 
 /**

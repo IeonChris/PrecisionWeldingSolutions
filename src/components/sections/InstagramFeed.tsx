@@ -64,12 +64,18 @@ export function InstagramFeed({ posts }: { posts: FeedPost[] }) {
                   )}
                 </span>
                 {post.isVideo ? <PlayBadge /> : null}
-                <span className="pointer-events-none absolute inset-x-0 bottom-0 bg-[linear-gradient(transparent,rgba(10,11,13,0.92))] px-3 pt-3 pb-[10px] text-[13px] leading-[1.35] font-medium text-fg">
-                  <span className="line-clamp-3">
-                    <span className="sr-only">Instagram post: </span>
-                    {post.caption}
+                {/* The strip is near-solid behind the text: reels often have their own text burned in at the
+                    bottom. Posts without a caption get no strip, only the screen-reader name. */}
+                {post.caption ? (
+                  <span className="pointer-events-none absolute inset-x-0 bottom-0 bg-[linear-gradient(rgba(10,11,13,0),rgba(10,11,13,0.88)_22px,rgba(10,11,13,0.94))] px-3 pt-6 pb-[10px] text-[13px] leading-[1.35] font-medium text-fg">
+                    <span className="line-clamp-3">
+                      <span className="sr-only">{instagramIntro.postLabel}: </span>
+                      {post.caption}
+                    </span>
                   </span>
-                </span>
+                ) : (
+                  <span className="sr-only">{instagramIntro.postLabel}</span>
+                )}
               </a>
             </li>
           ))}
