@@ -47,14 +47,21 @@ export const business = {
   geo: { latitude: 13.156313, longitude: -59.599438 },
   mapQuery: "Precision Welding Solutions, Reece Rd, Bridgetown, Saint Thomas, Barbados",
   hours: {
-    short: "Sun 8 AM – 1 PM · Other days by appointment",
     days: "Sunday 8 AM – 1 PM",
     note: "Weekdays by appointment",
     footer: "Sun 8 AM to 1 PM · Weekdays by appointment",
-    /** Structured-data hours (schema.org openingHoursSpecification). */
+    /** Structured-data hours (schema.org openingHoursSpecification); also drives the nav's open/closed status. */
     schema: [{ dayOfWeek: "Sunday", opens: "08:00", closes: "13:00" }],
+    /** Barbados is UTC−4 all year (no daylight saving). */
+    utcOffsetHours: -4,
   },
   credit: { name: "beCALM Group LTD.", url: "https://becalmgroup.com" },
+} as const;
+
+/** Prefilled first lines for WhatsApp links. `{service}` is replaced with the service title. */
+export const whatsappMessages = {
+  photo: "Hi Kris, here is a photo of the part.",
+  service: "Hi Kris, I need help with: {service}. Photo attached.",
 } as const;
 
 /* ---------- Photos ---------- */
@@ -72,28 +79,16 @@ export const images = {
     placeholder: "Drop a wide shot of Kris welding (sparks, dark background)",
     position: "40% 45%",
   },
-  servicesBg: {
-    src: "/images/ibeam-weld.jpg",
-    alt: "",
-    placeholder: "Wide workshop shot: welder in helmet, sparks (stays fixed while text scrolls)",
-    position: "50% 12%",
-  },
   about: {
     src: "/images/kris-marina.jpg",
     alt: "Kris on a marina dock with his TIG torch, beside the aluminum frame he is welding",
     placeholder: "Photo of Kris at work",
   },
-  whyBg: {
-    src: "/images/boat-rail-weld.jpg",
-    alt: "",
-    placeholder: "Background photo",
-    position: "50% 30%",
-  },
   contactBg: {
-    src: "/images/ibeam-weld.jpg",
+    src: "/images/shop-front.jpg",
     alt: "",
     placeholder: "Background photo",
-    position: "50% 55%",
+    position: "50% 45%",
   },
   /** Photo half of the link-preview card (src/app/opengraph-image.tsx). */
   share: {
@@ -132,76 +127,81 @@ export const footerLinks = [
   { href: "#contact", label: "Contact" },
 ] as const;
 
+export const nav = {
+  whatsapp: "WhatsApp",
+  /** Open/closed status beside the WhatsApp button (from 1100px). Keep in step with `business.hours`. */
+  status: { open: "Open now · until 1 PM", closed: "Opens Sunday 8 AM" },
+} as const;
+
+/** Phone-only bottom bar (below 832px). */
+export const mobileBar = {
+  call: "Call",
+  photo: "Send a photo",
+} as const;
+
 /* ---------- Hero ---------- */
 
 export const hero = {
-  eyebrow: "St. Thomas, Barbados",
-  titleLines: ["Precision welding.", "Clean. Strong."],
-  titleAccent: "Exact.",
-  sub: "Thread repairs, plug extraction, aluminum welding and fabrication.",
-  secondaryCta: { href: "#work", label: "See recent work" },
-} as const;
-
-/* ---------- Intro ---------- */
-
-export const intro = {
-  eyebrow: "Precision Welding Solutions",
-  title: "Welding and fabrication under one roof in St. Thomas",
-  body: "Run by Kris, a welder and fabricator with 20 years of experience. From seized glow plugs to full custom frames, every job leaves the shop back to spec.",
-  stat: { value: "20+", label: "Years experience" },
-  pillars: ["Stronger connections", "Quality work", "Lasting solutions"],
+  eyebrow: "Welding & fabrication · St. Thomas",
+  title: "Seized, stripped or cracked?",
+  titleAccent: "Fixed to spec.",
+  sub: "Send Kris a photo of the part. You'll get a straight answer and a price, usually the same day.",
+  primaryCta: "Send a photo on WhatsApp",
+  /** Followed by the phone number. */
+  callCta: "Call",
+  proof: [
+    { value: "20+ years", label: "Welding & fabrication in Barbados" },
+    { value: "Steel · SS · Alu", label: "TIG welding, clean full-penetration beads" },
+    { value: "Island-wide", label: "On-site repairs by arrangement" },
+  ],
 } as const;
 
 /* ---------- Services ---------- */
 
 export const servicesIntro = {
-  eyebrow: "What we do",
-  title: "Our",
-  titleAccent: "services",
-  body: "If it's metal and it's broken, stripped, cracked or doesn't exist yet, bring it in or send a photo on WhatsApp.",
-  cta: {
-    title: "Not sure what you need?",
+  eyebrow: "What we fix & build",
+  titleLines: ["If it's metal,", "it's a job."],
+  body: "Broken, stripped, cracked, or doesn't exist yet. Bring it to Reece Rd or send a photo first.",
+  help: {
+    lead: "Not sure what you need?",
     body: "Send a photo of the part. You'll get a straight answer and a price.",
     button: "Message on WhatsApp",
   },
+  /** Read out after each service row by screen readers. */
+  rowAction: "Ask Kris on WhatsApp",
 } as const;
 
+/** Each row opens WhatsApp with `whatsappMessages.service`. The structured data reads `title` and `desc`. */
 export const services = [
   {
-    num: "01",
     title: "Thread repairs",
-    desc: "Stripped, cross-threaded or damaged threads restored: heli-coil, time-sert, re-tap or weld and re-cut to original spec.",
-    tags: "Restore · Repair · Reuse",
+    desc: "Stripped, cross-threaded or damaged threads brought back to original spec.",
+    methods: "Heli-coil · Time-sert · Re-tap · Weld & re-cut",
   },
   {
-    num: "02",
     title: "Glow & spark plug removal",
-    desc: "Seized or snapped glow plugs and spark plugs extracted without pulling the head. Thread repaired if needed.",
-    tags: "Diesel · Petrol · Heads",
+    desc: "Seized or snapped plugs extracted without pulling the head. Thread repaired if needed.",
+    methods: "Diesel · Petrol · Aluminum heads",
   },
   {
-    num: "03",
     title: "Aluminum welding",
-    desc: "TIG welding of cracked housings, intakes, tanks, wheels and castings. Clean beads, full penetration.",
-    tags: "Clean · Strong · Precision",
+    desc: "TIG welding with clean beads and full penetration.",
+    methods: "Housings · Intakes · Tanks · Wheels · Castings",
   },
   {
-    num: "04",
     title: "Fabrication",
-    desc: "Custom frames, brackets, gates, racks and one-off parts in steel, stainless and aluminum. Built to last.",
-    tags: "Custom · Durable · Professional",
+    desc: "Custom, one-off parts built to last.",
+    methods: "Frames · Brackets · Gates · Racks · Steel, stainless & aluminum",
   },
   {
-    num: "05",
     title: "Flange & exhaust work",
-    desc: "V-band conversions, flange changes, broken exhaust ears and manifold repairs.",
-    tags: "V-band · Manifold · Repair",
+    desc: "V-band conversions, flange changes and manifold repairs.",
+    methods: "V-band · Flanges · Broken ears · Manifolds",
   },
   {
-    num: "06",
     title: "Mobile / on-site",
-    desc: "Can't bring it in? On-site welding and repair across Barbados for equipment, gates and structures.",
-    tags: "Island-wide · By arrangement",
+    desc: "Can't bring it in? On-site welding and repair anywhere in Barbados.",
+    methods: "Equipment · Gates · Structures · By arrangement",
   },
 ] as const;
 
@@ -229,30 +229,66 @@ export const about = {
 export const whyIntro = {
   eyebrow: "Why choose us",
   title: "Stronger connections. Quality work. Lasting solutions.",
+  note: "No stock photos. Every picture here is a job Kris did himself.",
 } as const;
 
-export const reasons = [
+/** Each reason pairs with one of Kris's job photos; `chip` is the caption on the photo. */
+export const reasons: {
+  num: string;
+  title: string;
+  desc: string;
+  chip: string;
+  image: SiteImage;
+}[] = [
   {
     num: "01",
     title: "Repaired to spec",
     desc: "Not a patch job. Threads, fits and welds brought back to original tolerance so the fix holds.",
+    chip: "TIG · boat rail mount",
+    image: {
+      src: "/images/boat-rail-weld.jpg",
+      alt: "TIG-welding a rail mount on a fishing boat",
+      placeholder: "Job photo",
+      position: "50% 30%",
+    },
   },
   {
     num: "02",
     title: "Saves the part",
     desc: "Seized plugs, snapped studs and cracked castings recovered instead of replaced. Cheaper than a new head or housing.",
+    chip: "Cutting stock in the shop",
+    image: {
+      src: "/images/hero-cutting-poster.jpg",
+      alt: "Torch-cutting steel in the shop, sparks falling to the floor",
+      placeholder: "Job photo",
+      position: "40% 45%",
+    },
   },
   {
     num: "03",
     title: "One point of contact",
     desc: "You deal with Kris from quote to pickup. No handoffs, no surprises.",
+    chip: "Fabrication · steel frame",
+    image: {
+      src: "/images/frame-job.png",
+      alt: "Custom welded steel frame",
+      placeholder: "Job photo",
+      position: "50% 50%",
+    },
   },
   {
     num: "04",
     title: "Local, island-wide",
     desc: "Based in St. Thomas, five minutes from Bridgetown. Mobile service anywhere in Barbados.",
+    chip: "On-site · steel I-beam",
+    image: {
+      src: "/images/ibeam-weld.jpg",
+      alt: "Stick-welding a steel I-beam on site",
+      placeholder: "Job photo",
+      position: "50% 40%",
+    },
   },
-] as const;
+];
 
 /* ---------- Instagram ---------- */
 
@@ -280,13 +316,6 @@ export const instagramFallbackPosts: {
   { id: "ig6", caption: "Failed universal joint?", isVideo: true },
 ];
 
-/* ---------- WhatsApp band ---------- */
-
-export const whatsappBand = {
-  title: "Send a photo. Get a price.",
-  body: "Fastest way to reach the shop is WhatsApp, usually answered same day.",
-} as const;
-
 /* ---------- Contact ---------- */
 
 export const contact = {
@@ -303,17 +332,6 @@ export const contact = {
     note: "Photos help. Attach them on WhatsApp after you send this.",
   },
 } as const;
-
-/** Options in the quote form's Service dropdown. */
-export const serviceOptions = [
-  "Thread repair",
-  "Glow / spark plug removal",
-  "Aluminum welding",
-  "Fabrication",
-  "Flange / exhaust work",
-  "On-site service",
-  "Something else",
-] as const;
 
 /* ---------- Footer ---------- */
 

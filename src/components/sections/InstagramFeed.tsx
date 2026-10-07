@@ -22,7 +22,7 @@ export function InstagramFeed({ posts }: { posts: FeedPost[] }) {
               <p className="eyebrow m-0 mb-[6px]">{instagramIntro.eyebrow}</p>
               <h2
                 id="work-title"
-                className="display m-0 text-[clamp(18px,2.4vw,30px)] leading-[1.05] [overflow-wrap:anywhere] max-[359px]:text-[16px]"
+                className="display m-0 text-[clamp(18px,2.4vw,30px)] leading-[1.05] text-pretty [overflow-wrap:anywhere] max-[359px]:text-[16px]"
               >
                 {/* Allow the handle to break after the underscore on narrow phones. */}@{first}_
                 <wbr />

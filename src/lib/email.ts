@@ -26,7 +26,7 @@ export async function sendQuoteEmail(props: BusinessNotificationProps): Promise<
       .split(",")
       .map((address) => address.trim())
       .filter(Boolean),
-    subject: `Quote request: ${props.service} (${props.name})`,
+    subject: `Quote request: ${props.name}`,
     html,
     text,
   });

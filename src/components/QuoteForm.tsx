@@ -1,7 +1,7 @@
 "use client";
 
 import { startTransition, useActionState, useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from "react";
-import { business, contact, serviceOptions } from "@/content";
+import { business, contact } from "@/content";
 import { submitQuote, type QuoteState } from "@/app/actions/quote";
 
 const initialState: QuoteState = { status: "idle" };
@@ -73,16 +73,6 @@ export function QuoteForm() {
           />
         </Field>
       </div>
-
-      <Field label="Service" error={errors.service} errorId={`${id}-service-error`}>
-        <select name="service" defaultValue={serviceOptions[0]} className="field" {...invalid("service")}>
-          {serviceOptions.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-      </Field>
 
       <Field label="Describe the job" error={errors.details} errorId={`${id}-details-error`}>
         <textarea

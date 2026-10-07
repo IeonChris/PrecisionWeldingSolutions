@@ -15,7 +15,7 @@ export default function NotFound() {
         style={{ objectPosition: "50% 38%" }}
       />
       <p className="eyebrow m-0">Error 404</p>
-      <h1 className="display m-0 text-[clamp(28px,4vw,46px)] leading-[1.05]">This page isn&apos;t in the shop</h1>
+      <h1 className="display m-0 text-[clamp(28px,4vw,46px)] leading-[1.05] text-pretty">This page isn&apos;t in the shop</h1>
       <p className="m-0 max-w-[420px] text-[17px] leading-[1.6] text-muted">
         The link may be old. Everything lives on the home page, or send Kris a photo on WhatsApp.
       </p>

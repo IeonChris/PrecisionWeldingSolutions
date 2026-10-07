@@ -2,7 +2,7 @@
 
 One-page marketing site for Precision Welding Solutions: welding and fabrication on Reece Rd, St. Thomas, Barbados. The goal of every section is to get a visitor to send Kris a photo of the part on WhatsApp, or to request a quote.
 
-The approved design is `design_handoff/Precision Welding Solutions.dc.html` (spec: `design_handoff/README.md`). It is kept for reference and is not part of the build.
+The approved design is the v3 redesign, `design_handoff/Redesign v3.dc.html`. The original handoff (`design_handoff/Precision Welding Solutions.dc.html`, spec in `design_handoff/README.md`) is beside it. Both are kept for reference and are not part of the build.
 
 ## Stack
 
@@ -31,24 +31,27 @@ npm run instagram:refresh   # rotate a long-lived Instagram token (Option B belo
 
 ## Changing copy and photos
 
-**Everything the visitor reads lives in `src/content.ts`**: phone, WhatsApp and Instagram links, address, hours, every heading and paragraph, the six services, the four reasons, the form's service list, the Instagram fallback posts, every photo and the hero video.
+**Everything the visitor reads lives in `src/content.ts`**: phone, WhatsApp and Instagram links, address and hours (which also drive the nav's open/closed status), every heading and paragraph, the hero proof row, the six services and their method lines, the four reasons and their job photos, the prefilled WhatsApp messages, the Instagram fallback posts, every photo and the hero video.
 
 To swap a photo:
 
 1. Put the file in `public/images/` (JPEG or PNG; the site serves AVIF/WebP versions automatically).
-2. Change that image's `src` in `images` in `src/content.ts`. Adjust `position` (CSS `object-position`) if the crop needs to move.
+2. Change that image's `src` in `src/content.ts` (in `images`, or in a `reasons` entry for the Why-us cards). Adjust `position` (CSS `object-position`) if the crop needs to move.
 3. Set `src: null` to show the dark captioned placeholder instead.
 
 All photos are Kris's own (sent over WhatsApp, which strips location data).
 
 | Slot | Current file | What it is |
 | --- | --- | --- |
-| `hero` | `hero-cutting-poster.jpg` | First frame of the hero video. Shows instantly, and on its own when the video can't play |
-| `servicesBg`, `contactBg` | `ibeam-weld.jpg` | Stick-welding a steel I-beam on site. Fixed behind the text; each slot frames it differently with `position` |
-| `whyBg` | `boat-rail-weld.jpg` | TIG-welding a rail mount on a fishing boat |
-| `about` | `kris-marina.jpg` | Kris on a marina dock with his TIG torch (4:5 crop) |
-| `share` | `og-cutting.jpg` | Photo half of the link-preview card |
-| `logo` | `logo.png` | The logo on black (round avatars, email header, structured data) |
+| `images.hero` | `hero-cutting-poster.jpg` | First frame of the hero video. Shows instantly, and on its own when the video can't play |
+| `images.about` | `kris-marina.jpg` | Kris on a marina dock with his TIG torch (4:5 crop) |
+| `images.contactBg` | `shop-front.jpg` | The shop on Reece Rd. Fixed behind the Contact section |
+| `reasons[0].image` | `boat-rail-weld.jpg` | Why us 01: TIG-welding a rail mount on a fishing boat |
+| `reasons[1].image` | `hero-cutting-poster.jpg` | Why us 02: torch-cutting stock in the shop |
+| `reasons[2].image` | `frame-job.png` | Why us 03: a welded steel frame. Only 400×180 (from the Google Maps listing), so it's soft in a 4:5 card: replace with the original photo |
+| `reasons[3].image` | `ibeam-weld.jpg` | Why us 04: stick-welding a steel I-beam on site |
+| `images.share` | `og-cutting.jpg` | Photo half of the link-preview card |
+| `images.logo` | `logo.png` | The logo on black (round avatars, email header, structured data) |
 
 Better originals help: WhatsApp compresses photos to 1500×2000 and video to ~480p. Ask Kris to send files as a **Document** (attach → Document) to keep full resolution.
 
@@ -92,7 +95,7 @@ If both variables are set, Behold wins.
 
 ## Quote form
 
-The form posts to a server action without reloading the page. The browser enforces the required fields (name and phone), the server validates again, drops bot submissions caught by a hidden honeypot field, limits each IP to five requests an hour, and emails the request to the owner. On success the button reads **"Sent. Kris will be in touch"**.
+The form has three fields: Name and Phone / WhatsApp (both required) and Describe the job. It posts to a server action without reloading the page. The browser enforces the required fields, the server validates again, drops bot submissions caught by a hidden honeypot field, limits each IP to five requests an hour, and emails the request to the owner (subject "Quote request: {name}"). On success the button reads **"Sent. Kris will be in touch"**.
 
 The email (`src/emails/BusinessNotification.tsx`, React Email) shows the customer's details and the job, with a **Reply on WhatsApp** button that opens a chat with the customer's number. Seven-digit local numbers get the +1 246 prefix automatically.
 
@@ -144,12 +147,36 @@ Copy `.env.local.example` to `.env.local` for local development and add the same
 
 ### Measuring performance locally
 
-Local Lighthouse runs on this machine under-report mobile performance. Chrome here records each response's decompressed size as its transfer size, so Lighthouse's simulated throttling treats the gzipped page as uncompressed (about 5× larger). Measured with DevTools throttling instead (`--throttling-method=devtools`), the production build scored 96 performance / 97 accessibility / 100 best practices / 100 SEO on mobile (2026-09-28). Results also swing with whatever else the machine is running: on a busy day the same build scored 44–63, so compare versions side by side in one session rather than against an old number, and confirm on the deployed URL with PageSpeed Insights.
+Local Lighthouse runs on this machine under-report mobile performance, for two reasons:
+
+- Chrome here records each response's decompressed size as its transfer size, so Lighthouse's simulated throttling treats the gzipped page as uncompressed (about 5× larger). Use DevTools throttling (`--throttling-method=devtools`) instead.
+- Next 15.5 builds on **Windows** emit no font preload links: its font manifest plugin matches `'/next-font-loader/index.js?'` with forward slashes, which Windows module paths never contain, so `.next/server/next-font-manifest.json` stays empty. The fonts then arrive late and the hero headline can re-wrap (a one-off layout shift of ~0.1 in about one load in five). Vercel builds on Linux, where the preloads are emitted.
+
+With the preloads in place (as on Vercel), the v3 redesign measured 89–98 performance (mean ~95), 100 accessibility, 100 best practices and 100 SEO on mobile with DevTools throttling, CLS ≤ 0.031 (2026-10-07). Results also swing with whatever else the machine is running, so compare versions side by side in one session rather than against an old number, and confirm on the deployed URL with PageSpeed Insights.
 
 ## Design notes
 
-- Colours, type, spacing and copy follow the handoff. At 1280px the layout matches the reference to within a pixel.
-- Photo sections (Services, Why us, Contact) keep their photo still while the text scrolls: the section has `clip-path: inset(0)` and the photo sits in a `position: fixed` layer (`src/components/FixedBackground.tsx`). This works on iOS, unlike `background-attachment: fixed`.
-- Below-the-fold blocks use `content-visibility: auto` (`cv-auto`) so phones skip laying them out until they near the screen. Never put it on a `.fixed-bg` section itself; it would break the fixed photo.
-- Responsive decisions the handoff left open: the nav collapses into a menu below 832px (the full bar needs about 806px); the Instagram grid is two columns on phones; the design's faintest grey `#6b7480` is lifted to `#77808c` where it is used for text so it meets 4.5:1 (it stays `#6b7480` for borders); the Google map is shown with a dark filter to match the page; the design-tool note under the Instagram grid ("Feed pulls the latest 6 posts…") is omitted.
-- White on the brand blue `#1e7fe0` is 4.06:1: fine for the large headline in the WhatsApp band, below 4.5:1 for small button labels and the light-blue sub-labels (Lighthouse's one accessibility finding). It is left as designed because it is a brand decision. Darkening text-bearing blue surfaces to `#1a73d0` (4.77:1 with white) would clear it: change `--color-blue` in `src/app/globals.css`.
+At 1280px the page matches `design_handoff/Redesign v3.dc.html` to within a pixel.
+
+**Sections, top to bottom** (`src/app/page.tsx`):
+
+1. **Nav** (`SiteNav`): logo, links, and from 832px a WhatsApp button; from 1100px an open/closed status (`ShopStatus`, worked out in the browser from `business.hours`, Barbados time). Below 832px: hamburger menu.
+2. **Hero**: problem-led headline, "Send a photo on WhatsApp" + "Call" buttons, proof row. The video panel is `HeroMedia`.
+3. **Services**: sticky intro on the left (from 768px), and a list of rows on the right; each row opens WhatsApp prefilled with that service.
+4. **About**: Kris's photo and story.
+5. **Why us**: four reasons, each with one of Kris's job photos.
+6. **Instagram** (#work): the live feed (see above).
+7. **Contact**: details, map and the quote form over the fixed shop-front photo.
+8. **Footer**, then the **mobile action bar** (Call / Send a photo, below 832px only, with a 72px spacer so it never covers the footer). The floating WhatsApp button shows from 832px up.
+
+**Colour rules:**
+
+- `--color-blue` (`#1e7fe0`) is for accents, rules, borders and avatar rings. Any blue fill that carries text uses `--color-blue-strong` (`#1a73d0`, 4.77:1 with white): every `btn-primary` and the About name plate. `--color-amber` is only the nav's "closed" dot.
+- The design's faintest grey `#6b7480` is lifted to `#77808c` where it is text, so it meets 4.5:1 (it stays `#6b7480` for borders).
+- Over the bright shop-front photo in Contact, the small labels and sub-lines use `muted` and the Instagram link `blue-hover`; with the scrim's middle stop at .82, every text element there measures 4.5:1 or better against the lightest part of the photo behind it.
+
+**Mechanics:**
+
+- Contact keeps its photo still while the text scrolls: the section has `clip-path: inset(0)` and the photo sits in a `position: fixed` layer (`src/components/FixedBackground.tsx`). This works on iOS, unlike `background-attachment: fixed`.
+- Below-the-fold blocks use `content-visibility: auto` (`cv-auto`) so phones skip laying them out until they near the screen; each has a `--cv-h` height estimate per breakpoint (measured; it only affects the scrollbar before the block renders). Never put `cv-auto` on a `.fixed-bg` section itself; it would break the fixed photo.
+- Other choices: the Instagram grid is two columns on phones, the Google map has a dark filter to match the page, and anchor links stop 80px below the top so the sticky nav never covers a heading.

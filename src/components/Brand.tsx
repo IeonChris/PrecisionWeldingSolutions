@@ -10,6 +10,13 @@ const variants = {
     word: "text-[18px] leading-none",
     sub: "text-[10px]",
   },
+  navSm: {
+    avatar: "h-[48px] w-[48px] border-2",
+    px: 48,
+    position: "50% 38%",
+    word: "text-[16px] leading-none",
+    sub: "text-[9px]",
+  },
   footer: {
     avatar: "h-[48px] w-[48px] border-2",
     px: 48,

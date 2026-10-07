@@ -2,12 +2,11 @@
 
 import { headers } from "next/headers";
 import { z } from "zod";
-import { serviceOptions } from "@/content";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { sendQuoteEmail } from "@/lib/email";
 import { baseUrl } from "@/lib/metadata";
 
-type FieldName = "name" | "phone" | "service" | "details";
+type FieldName = "name" | "phone" | "details";
 
 export interface QuoteState {
   status: "idle" | "sent" | "error";
@@ -22,7 +21,6 @@ const schema = z.object({
     .trim()
     .max(40, "That number looks too long.")
     .refine((v) => (v.match(/\d/g) ?? []).length >= 7, "Enter a phone or WhatsApp number Kris can reach you on."),
-  service: z.enum(serviceOptions, { message: "Choose a service." }),
   details: z.string().trim().max(4000, "Keep the description under 4,000 characters.").default(""),
 });
 
@@ -41,7 +39,6 @@ export async function submitQuote(_prev: QuoteState, formData: FormData): Promis
   const parsed = schema.safeParse({
     name: text(formData.get("name")),
     phone: text(formData.get("phone")),
-    service: text(formData.get("service")),
     details: text(formData.get("details")),
   });
   if (!parsed.success) {

@@ -2,7 +2,10 @@ import { business, contact, images } from "@/content";
 import { FixedBackground } from "@/components/FixedBackground";
 import { QuoteForm } from "@/components/QuoteForm";
 
-const dt = "pt-1 text-[12px] font-semibold tracking-[0.12em] text-faint-fg uppercase";
+// The shop-front photo behind this list is bright (white sky), so the small secondary text uses
+// lighter tokens than elsewhere: measured worst case over the photo is 4.5:1 or better.
+const dt = "pt-1 text-[12px] font-semibold tracking-[0.12em] text-muted uppercase";
+const subline = "text-[14px] text-muted";
 
 export function Contact() {
   const { address } = business;
@@ -13,14 +16,14 @@ export function Contact() {
       id="contact"
       labelledBy="contact-title"
       image={images.contactBg}
-      scrim="linear-gradient(180deg,rgba(10,11,13,.86),rgba(10,11,13,.78) 50%,rgba(10,11,13,.86))"
+      scrim="linear-gradient(180deg,rgba(10,11,13,.86),rgba(10,11,13,.82) 50%,rgba(10,11,13,.86))"
       className="section-pad px-6"
-      contentClassName="cv-auto [--cv-h:1210px] md:[--cv-h:650px] lg:[--cv-h:650px]"
+      contentClassName="cv-auto [--cv-h:1130px] md:[--cv-h:565px] lg:[--cv-h:640px]"
     >
       <div className="mx-auto grid max-w-[1200px] grid-cols-[repeat(auto-fit,minmax(min(320px,100%),1fr))] gap-14">
         <div>
           <p className="eyebrow m-0 mb-3">{contact.eyebrow}</p>
-          <h2 id="contact-title" className="display m-0 mb-8 text-[clamp(28px,3.4vw,46px)] leading-[1.05]">
+          <h2 id="contact-title" className="display m-0 mb-8 text-[clamp(28px,3.4vw,46px)] leading-[1.05] text-pretty">
             {contact.title}
           </h2>
 
@@ -30,7 +33,7 @@ export function Contact() {
               <a href={business.phone.href} className="font-semibold text-white hover:text-blue-light active:text-blue">
                 {business.phone.display}
               </a>
-              <div className="text-[14px] text-dim">{contact.phoneNote}</div>
+              <div className={subline}>{contact.phoneNote}</div>
             </dd>
 
             <dt className={dt}>Address</dt>
@@ -46,12 +49,17 @@ export function Contact() {
             <dd className="m-0 text-fg">
               {business.hours.days}
               <br />
-              <span className="text-[14px] text-dim">{business.hours.note}</span>
+              <span className={subline}>{business.hours.note}</span>
             </dd>
 
             <dt className={dt}>Social</dt>
             <dd className="m-0">
-              <a href={business.instagram.url} target="_blank" rel="noopener noreferrer" className="active:text-blue">
+              <a
+                href={business.instagram.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-hover hover:text-white focus-visible:text-white active:text-blue-light"
+              >
                 @{business.instagram.handle}
               </a>
             </dd>

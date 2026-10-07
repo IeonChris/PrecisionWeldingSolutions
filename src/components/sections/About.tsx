@@ -17,16 +17,17 @@ export function About() {
               sizes="(min-width: 1248px) 572px, (min-width: 744px) calc(50vw - 52px), calc(100vw - 48px)"
             />
           </div>
-          <p className="absolute -right-3 -bottom-3 m-0 bg-blue px-5 py-4 font-display text-[16px] leading-[1.1] font-bold tracking-[0.04em] text-white uppercase">
+          {/* Text-bearing blue fill, so `blue-strong` with a white role line (the old light-blue role was 3.3:1). */}
+          <p className="absolute -right-3 -bottom-3 m-0 bg-blue-strong px-5 py-4 font-display text-[16px] leading-[1.1] font-bold tracking-[0.04em] text-white uppercase">
             {about.nameplate.name}
             <br />
-            <span className="text-[14px] font-medium tracking-[0.2em] text-blue-plate">{about.nameplate.role}</span>
+            <span className="text-[14px] font-medium tracking-[0.2em] text-white">{about.nameplate.role}</span>
           </p>
         </div>
 
         <div>
           <p className="eyebrow m-0 mb-3">{about.eyebrow}</p>
-          <h2 id="about-title" className="display m-0 mb-6 text-[clamp(28px,3.4vw,46px)] leading-[1.05]">
+          <h2 id="about-title" className="display m-0 mb-6 text-[clamp(28px,3.4vw,46px)] leading-[1.05] text-pretty">
             {about.title}
           </h2>
           {about.paragraphs.map((p, i) => (

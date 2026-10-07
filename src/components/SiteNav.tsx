@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { business, navLinks } from "@/content";
+import { business, nav, navLinks } from "@/content";
+import { photoWhatsappHref } from "@/lib/whatsapp";
 import { Brand } from "@/components/Brand";
 import { WhatsAppIcon } from "@/components/Icons";
+import { ShopStatus } from "@/components/ShopStatus";
 
 /**
- * Sticky nav. From the `nav` breakpoint up it is the design's single bar; below it the
- * links collapse into a hamburger panel (not designed in the handoff, kept deliberately plain).
+ * Sticky nav. From the `nav` breakpoint (832px) up: links + WhatsApp button, plus the
+ * open/closed status from 1100px. Below 832px the links collapse into a hamburger panel and
+ * the bottom action bar (MobileActionBar) carries Call / WhatsApp.
  */
 export function SiteNav() {
   const [open, setOpen] = useState(false);
@@ -40,21 +43,21 @@ export function SiteNav() {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-50">
+    <header id="top" className="sticky top-0 z-50">
       <nav
         aria-label="Main"
         className="relative z-[2] border-b border-line bg-[rgba(10,11,13,0.92)] backdrop-blur-[10px]"
       >
-        <div className="container-site flex items-center justify-between gap-6 py-3">
+        <div className="container-site flex items-center justify-between gap-5 py-[10px]">
           <a
             href="#top"
             className="flex min-h-[44px] items-center gap-3 rounded-[2px] text-white hover:text-white active:opacity-80"
             aria-label={`${business.name}, back to top`}
           >
-            <Brand variant="nav" />
+            <Brand variant="navSm" />
           </a>
 
-          <ul className="m-0 hidden list-none gap-7 p-0 text-[15px] font-medium nav:flex">
+          <ul className="m-0 hidden list-none gap-6 p-0 text-[15px] font-medium whitespace-nowrap nav:flex">
             {navLinks.map((l) => (
               <li key={l.href}>
                 <a href={l.href} className="link-quiet">
@@ -64,14 +67,16 @@ export function SiteNav() {
             ))}
           </ul>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
+            <ShopStatus />
             <a
-              href={business.whatsappUrl}
+              href={photoWhatsappHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-primary whitespace-nowrap px-[18px] py-[10px] text-[14px] max-xs:hidden"
+              className="btn btn-primary min-h-[44px] gap-2 whitespace-nowrap px-[18px] py-[11px] text-[14px] max-nav:hidden"
             >
-              WhatsApp us
+              <WhatsAppIcon size={18} />
+              {nav.whatsapp}
             </a>
             <button
               ref={toggleRef}

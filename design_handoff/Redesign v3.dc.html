@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+html{scroll-behavior:smooth;background:#0a0b0d;scroll-padding-top:80px}
+body{margin:0;background:#0a0b0d;color:#e6e9ed;font-family:'Open Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#3b9dff;text-decoration:none}a:hover{color:#7fc0ff}
+input,select,textarea,button{font:inherit}
+</style>
+</helmet>
+
+<header id="top" style="position:sticky;top:0;z-index:50;border-bottom:1px solid #1d2229;background:rgba(10,11,13,.92);backdrop-filter:blur(10px)">
+  <div style="max-width:1248px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px">
+    <a href="#top" style="display:flex;align-items:center;gap:12px;color:#fff;min-height:44px">
+      <img src="assets/logo.png" alt="" style="width:48px;height:48px;flex:none;border-radius:50%;border:2px solid #1e7fe0;object-fit:cover;object-position:50% 38%">
+      <span style="font-family:Montserrat;font-weight:800;font-size:16px;line-height:1;letter-spacing:.02em;color:#fff">PRECISION<br><span style="font-size:9px;font-weight:600;letter-spacing:.28em;color:#3b9dff">WELDING SOLUTIONS</span></span>
+    </a>
+    <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+      <nav style="display:flex;gap:24px;font-size:15px;font-weight:500;white-space:nowrap">
+        <a href="#services" style="color:#c9ced4" style-hover="color:#fff">Services</a>
+        <a href="#about" style="color:#c9ced4" style-hover="color:#fff">About</a>
+        <a href="#why" style="color:#c9ced4" style-hover="color:#fff">Why us</a>
+        <a href="#work" style="color:#c9ced4" style-hover="color:#fff">Work</a>
+        <a href="#contact" style="color:#c9ced4" style-hover="color:#fff">Contact</a>
+      </nav>
+    </sc-if>
+    <div style="display:flex;align-items:center;gap:16px">
+      <sc-if value="{{ xl }}" hint-placeholder-val="{{ true }}">
+        <a href="#contact" style="display:flex;flex-direction:column;align-items:flex-end;white-space:nowrap;line-height:1.25;color:#c9ced4" style-hover="color:#fff">
+          <span style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#e6e9ed"><span style="width:8px;height:8px;border-radius:50%;background:{{ statusDot }}"></span>{{ statusLabel }}</span>
+          <span style="font-size:12px;color:#8b95a1">+1 (246) 252-5877</span>
+        </a>
+      </sc-if>
+      <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}"><a href="{{ wa }}" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:#1a73d0;color:#fff;font-weight:600;padding:11px 18px;border-radius:4px;font-size:14px;white-space:nowrap;min-height:44px" style-hover="background:#3b9dff;color:#fff">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.3-.4.7-1.3.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.6 1.1 2.8c.1.2 1.9 2.9 4.6 4 1.7.7 2.3.8 3.2.7.5-.1 1.5-.6 1.8-1.3.2-.6.2-1.200.1-1.3 0-.1-.2-.2-.4-.3z"></path></svg>
+        WhatsApp
+      </a></sc-if>
+      <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+        <button type="button" aria-label="Open menu" style="width:44px;height:44px;border:1px solid #3a424d;border-radius:4px;background:transparent;color:#e6e9ed;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer">
+          <span style="display:block;width:20px;height:2px;background:currentColor"></span>
+          <span style="display:block;width:20px;height:2px;background:currentColor"></span>
+          <span style="display:block;width:20px;height:2px;background:currentColor"></span>
+        </button>
+      </sc-if>
+    </div>
+  </div>
+</header>
+
+<section data-screen-label="Hero" style="position:relative;display:flex;align-items:flex-end;min-height:clamp(560px,82vh,760px);overflow:hidden;background:#0a0b0d">
+  <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+    <div style="position:absolute;top:0;bottom:0;right:0;width:48%;max-width:760px;background:#161b22;-webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 40%);mask-image:linear-gradient(90deg,transparent 0%,#000 40%)">
+      <img src="assets/hero-cutting-poster.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:40% 45%">
+      <video src="assets/hero-cutting.mp4" autoplay="" muted="" loop="" playsinline="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:40% 45%"></video>
+    </div>
+    <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(10,11,13,.96) 0%,rgba(10,11,13,.75) 50%,rgba(10,11,13,.2) 100%)"></div>
+  </sc-if>
+  <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;background:#161b22">
+      <img src="assets/hero-cutting-poster.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:40% 45%">
+      <video src="assets/hero-cutting.mp4" autoplay="" muted="" loop="" playsinline="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:40% 45%"></video>
+    </div>
+    <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(10,11,13,.5) 0%,rgba(10,11,13,.62) 40%,rgba(10,11,13,.9) 100%)"></div>
+  </sc-if>
+  <button type="button" aria-label="Pause background video" style="position:absolute;top:20px;right:24px;z-index:3;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(10,11,13,.6);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="border-color:#3b9dff">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><rect x="2.5" y="1.5" width="3" height="11" rx="1"></rect><rect x="8.5" y="1.5" width="3" height="11" rx="1"></rect></svg>
+  </button>
+  <div style="position:relative;width:100%;max-width:1248px;margin:0 auto;padding:120px 24px 56px">
+    <p style="margin:0 0 20px;display:inline-flex;align-items:center;gap:10px;color:#3b9dff;font-weight:600;font-size:12px;letter-spacing:.22em;text-transform:uppercase"><span style="width:28px;height:2px;background:#3b9dff"></span>Welding &amp; fabrication · St. Thomas</p>
+    <h1 style="margin:0 0 20px;max-width:820px;font-family:Montserrat;font-weight:800;text-transform:uppercase;text-wrap:balance;font-size:clamp(38px,5.4vw,76px);line-height:.98;letter-spacing:-.02em;color:#fff">Seized, stripped or cracked? <span style="color:#3b9dff">Fixed to spec.</span></h1>
+    <p style="margin:0 0 32px;max-width:540px;font-size:18px;line-height:1.6;text-wrap:pretty;color:#c9ced4">Send Kris a photo of the part. You'll get a straight answer and a price, usually the same day.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:12px">
+      <a href="{{ wa }}" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;background:#1a73d0;color:#fff;font-weight:600;padding:16px 26px;border-radius:4px;font-size:16px;min-height:52px" style-hover="background:#3b9dff;color:#fff">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.3-.4.7-1.3.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.6 1.1 2.8c.1.2 1.9 2.9 4.6 4 1.7.7 2.3.8 3.2.7.5-.1 1.5-.6 1.8-1.3.2-.6.2-1.2.1-1.3 0-.1-.2-.2-.4-.3z"></path></svg>
+        Send a photo on WhatsApp
+      </a>
+      <a href="tel:+12462525877" style="display:inline-flex;align-items:center;justify-content:center;border:1px solid #6b7480;color:#fff;font-weight:600;padding:16px 26px;border-radius:4px;font-size:16px;min-height:52px" style-hover="border-color:#3b9dff;color:#fff">Call +1 (246) 252-5877</a>
+    </div>
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid rgba(255,255,255,.14);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:20px 32px;max-width:860px">
+      <div><div style="font-family:Montserrat;font-weight:800;font-size:22px;color:#fff;line-height:1.1">20+ years</div><div style="font-size:13px;color:#aeb6c0;margin-top:4px">Welding &amp; fabrication in Barbados</div></div>
+      <div><div style="font-family:Montserrat;font-weight:800;font-size:22px;color:#fff;line-height:1.1">Steel · SS · Alu</div><div style="font-size:13px;color:#aeb6c0;margin-top:4px">TIG welding, clean full-penetration beads</div></div>
+      <div><div style="font-family:Montserrat;font-weight:800;font-size:22px;color:#fff;line-height:1.1">Island-wide</div><div style="font-size:13px;color:#aeb6c0;margin-top:4px">On-site repairs by arrangement</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="services" data-screen-label="Services" style="background:#0f1216;border-bottom:1px solid #1d2229;padding:clamp(64px,9vw,104px) 24px">
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:40px 72px;align-items:start">
+    <div style="position:sticky;top:104px;display:flex;flex-direction:column;gap:20px;max-width:400px">
+      <p style="margin:0;color:#3b9dff;font-weight:600;font-size:12px;letter-spacing:.22em;text-transform:uppercase">What we fix &amp; build</p>
+      <h2 style="margin:0;font-family:Montserrat;font-weight:800;text-transform:uppercase;font-size:clamp(34px,4.4vw,60px);line-height:.95;letter-spacing:-.02em;color:#fff">If it's metal,<br>it's a job.</h2>
+      <p style="margin:0;font-size:17px;line-height:1.6;text-wrap:pretty;color:#aeb6c0">Broken, stripped, cracked, or doesn't exist yet. Bring it to Reece Rd or send a photo first.</p>
+      <div style="margin-top:8px;padding-top:20px;border-top:1px solid #1d2229;display:flex;flex-direction:column;gap:14px">
+        <p style="margin:0;font-size:15px;line-height:1.55;color:#c9ced4"><strong style="color:#fff">Not sure what you need?</strong> Send a photo of the part. You'll get a straight answer and a price.</p>
+        <a href="{{ wa }}" target="_blank" style="align-self:flex-start;background:#1a73d0;color:#fff;font-weight:600;padding:13px 20px;border-radius:4px;font-size:15px" style-hover="background:#3b9dff;color:#fff">Message on WhatsApp</a>
+      </div>
+    </div>
+    <div style="border-bottom:1px solid #2a3340">
+      <sc-for list="{{ services }}" as="s" hint-placeholder-count="6">
+        <a href="{{ s.wa }}" target="_blank" style="display:grid;grid-template-columns:40px minmax(0,1fr) 28px;gap:4px 16px;padding:28px 0 26px;border-top:1px solid #2a3340;color:#e6e9ed" style-hover="color:#3b9dff">
+          <span style="padding-top:5px;font-family:Montserrat;font-size:14px;font-weight:600;color:#77808c">{{ s.num }}</span>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <h3 style="margin:0;font-family:Montserrat;font-size:clamp(20px,2vw,26px);line-height:1.1;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:-.005em">{{ s.title }}</h3>
+            <p style="margin:0;font-size:16px;line-height:1.55;text-wrap:pretty;color:#aeb6c0">{{ s.desc }}</p>
+            <p style="margin:4px 0 0;font-size:13px;line-height:1.5;letter-spacing:.04em;color:#8b95a1">{{ s.methods }}</p>
+          </div>
+          <span style="padding-top:2px;font-size:22px;line-height:1;color:inherit;text-align:right">↗</span>
+        </a>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="about" data-screen-label="About" style="border-top:1px solid #1d2229;border-bottom:1px solid #1d2229;background:#0f1216;padding:96px 24px">
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));align-items:center;gap:56px">
+    <div style="position:relative">
+      <div style="position:absolute;top:-16px;left:-16px;width:123px;height:123px;border-top:3px solid #1e7fe0;border-left:3px solid #1e7fe0"></div>
+      <div style="position:relative;aspect-ratio:4/5;overflow:hidden;background:#161b22"><img src="assets/kris-marina.jpg" alt="Kris on a marina dock with his TIG torch" style="width:100%;height:100%;object-fit:cover"></div>
+      <p style="position:absolute;right:-12px;bottom:-12px;margin:0;background:#1e7fe0;padding:16px 20px;font-family:Montserrat;font-size:16px;line-height:1.1;font-weight:700;letter-spacing:.04em;color:#fff;text-transform:uppercase">Kris<br><span style="font-size:14px;font-weight:500;letter-spacing:.2em;color:#dbeaff">Owner · Welder</span></p>
+    </div>
+    <div>
+      <p style="margin:0 0 12px;color:#3b9dff;font-weight:600;font-size:12px;letter-spacing:.22em;text-transform:uppercase">About</p>
+      <h2 style="margin:0 0 24px;font-family:Montserrat;font-weight:800;text-transform:uppercase;text-wrap:pretty;font-size:clamp(28px,3.4vw,46px);line-height:1.05">Welder and fabricator. One shop, one standard.</h2>
+      <p style="margin:0 0 18px;font-size:17px;line-height:1.7;text-wrap:pretty;color:#aeb6c0">Precision Welding Solutions is run by Kris, a welder and fabricator with over 20 years of experience, working out of Reece Rd, St. Thomas. Most jobs that come through the door are things other shops turned away: seized glow plugs, stripped threads, snapped studs, cracked aluminum housings.</p>
+      <p style="margin:0 0 32px;font-size:17px;line-height:1.7;text-wrap:pretty;color:#aeb6c0">Having welding and fabrication under one roof means a repair isn't just patched. It's brought back to spec.</p>
+      <div style="margin:0 0 36px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));column-gap:24px;row-gap:12px">
+        <sc-for list="{{ aboutPoints }}" as="p" hint-placeholder-count="4">
+          <div style="display:flex;align-items:flex-start;gap:12px;font-weight:500;color:#e6e9ed"><span style="flex:none;margin-top:3px;width:18px;height:18px;background:#1e7fe0;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)"></span>{{ p }}</div>
+        </sc-for>
+      </div>
+      <a href="#contact" style="display:inline-flex;border:1px solid #3a424d;color:#e6e9ed;font-weight:600;padding:14px 24px;border-radius:4px;font-size:16px" style-hover="border-color:#3b9dff;color:#e6e9ed">Talk to Kris</a>
+    </div>
+  </div>
+</section>
+
+<section id="why" data-screen-label="Why us" style="background:#0a0b0d;padding:clamp(64px,9vw,104px) 24px">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(360px,100%),1fr));gap:16px 56px;align-items:end;margin-bottom:40px">
+      <div>
+        <p style="margin:0 0 12px;color:#3b9dff;font-weight:600;font-size:12px;letter-spacing:.22em;text-transform:uppercase">Why choose us</p>
+        <h2 style="margin:0;font-family:Montserrat;font-weight:800;text-transform:uppercase;text-wrap:balance;font-size:clamp(28px,3.4vw,46px);line-height:1.05;color:#fff">Stronger connections. Quality work. Lasting solutions.</h2>
+      </div>
+      <p style="margin:0;max-width:440px;font-size:16px;line-height:1.6;color:#aeb6c0;text-wrap:pretty">No stock photos. Every picture here is a job Kris did himself.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:{{ whyCols }};gap:32px 16px">
+      <sc-for list="{{ reasons }}" as="r" hint-placeholder-count="4">
+        <figure style="margin:0;display:flex;flex-direction:column;gap:18px">
+          <div style="position:relative;aspect-ratio:4/5;overflow:hidden;background:#161b22">
+            <img src="{{ r.src }}" alt="{{ r.alt }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:{{ r.pos }}">
+            <span style="position:absolute;left:12px;bottom:12px;background:rgba(10,11,13,.82);padding:6px 10px;font-size:12px;font-weight:600;letter-spacing:.04em;color:#e6e9ed">{{ r.job }}</span>
+          </div>
+          <figcaption style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:baseline;gap:12px;border-top:2px solid #1e7fe0;padding-top:14px">
+              <span style="font-family:Montserrat;font-size:14px;font-weight:700;color:#3b9dff">{{ r.num }}</span>
+              <h3 style="margin:0;font-family:Montserrat;font-size:18px;font-weight:700;color:#fff;text-transform:uppercase">{{ r.title }}</h3>
+            </div>
+            <p style="margin:0;font-size:15px;line-height:1.6;text-wrap:pretty;color:#aeb6c0">{{ r.desc }}</p>
+          </figcaption>
+        </figure>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="work" data-screen-label="Instagram" style="border-top:1px solid #1d2229;background:#0f1216;padding:96px 24px">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="margin-bottom:40px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px">
+      <div style="display:flex;min-width:0;align-items:center;gap:18px">
+        <img src="assets/logo.png" alt="" style="width:82px;height:82px;flex:none;border-radius:50%;border:3px solid #1e7fe0;background:#0a0b0d;object-fit:cover;padding:2px;object-position:50% 38%">
+        <div style="min-width:0">
+          <p style="margin:0 0 6px;color:#3b9dff;font-weight:600;font-size:12px;letter-spacing:.22em;text-transform:uppercase">Latest from Instagram</p>
+          <h2 style="margin:0;font-family:Montserrat;font-weight:800;text-transform:uppercase;font-size:clamp(18px,2.4vw,30px);line-height:1.05;overflow-wrap:anywhere">@precision_<wbr>weldingsolutions</h2>
+        </div>
+      </div>
+      <a href="https://instagram.com/precision_weldingsolutions" target="_blank" style="background:#1e7fe0;color:#fff;font-weight:600;padding:12px 22px;border-radius:4px;font-size:15px;white-space:nowrap" style-hover="background:#3b9dff;color:#fff">Follow on Instagram</a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">
+      <sc-for list="{{ igPosts }}" as="p" hint-placeholder-count="6">
+        <a href="https://instagram.com/precision_weldingsolutions" target="_blank" style="position:relative;display:block;aspect-ratio:1;overflow:hidden;background:#0a0b0d">
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:#13171c repeating-linear-gradient(135deg,transparent 0 14px,rgba(255,255,255,.018) 14px 15px);padding:24px 24px 34%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#6b7480" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="m21 15-5-5L5 21"></path></svg>
+          </div>
+          <span style="position:absolute;top:10px;right:10px;width:22px;height:22px;border-radius:4px;background:rgba(10,11,13,.6);display:flex;align-items:center;justify-content:center"><span style="margin-left:2px;width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:9px solid #fff"></span></span>
+          <span style="position:absolute;left:0;right:0;bottom:0;background:linear-gradient(transparent,rgba(10,11,13,.92));padding:12px 12px 10px;font-size:13px;line-height:1.35;font-weight:500;color:#e6e9ed">{{ p.caption }}</span>
+        </a>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="contact" data-screen-label="Contact" style="position:relative;clip-path:inset(0);background:#0a0b0d;padding:96px 24px">
+  <div style="position:fixed;inset:0;z-index:0;background:#161b22;pointer-events:none"><img src="assets/shop-front.jpeg" alt="" style="width:100%;height:100%;object-fit:cover;object-position:50% 45%"></div>
+  <div style="position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(10,11,13,.86),rgba(10,11,13,.78) 50%,rgba(10,11,13,.86))"></div>
+  <div style="position:relative;z-index:2;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:56px">
+    <div>
+      <p style="margin:0 0 12px;color:#3b9dff;font-weight:600;font-size:12px;letter-spacing:.22em;text-transform:uppercase">Contact</p>
+      <h2 style="margin:0 0 32px;font-family:Montserrat;font-weight:800;text-transform:uppercase;font-size:clamp(28px,3.4vw,46px);line-height:1.05">Find the shop</h2>
+      <dl style="margin:0;display:grid;grid-template-columns:auto 1fr;column-gap:24px;row-gap:18px;font-size:16px">
+        <dt style="padding-top:4px;font-size:12px;font-weight:600;letter-spacing:.12em;color:#77808c;text-transform:uppercase">Phone</dt>
+        <dd style="margin:0"><a href="tel:+12462525877" style="font-weight:600;color:#fff" style-hover="color:#3b9dff">+1 (246) 252-5877</a><div style="font-size:14px;color:#8b95a1">Call or WhatsApp</div></dd>
+        <dt style="padding-top:4px;font-size:12px;font-weight:600;letter-spacing:.12em;color:#77808c;text-transform:uppercase">Address</dt>
+        <dd style="margin:0;color:#e6e9ed">Reece Rd, Bridgetown<br>Saint Thomas, Barbados</dd>
+        <dt style="padding-top:4px;font-size:12px;font-weight:600;letter-spacing:.12em;color:#77808c;text-transform:uppercase">Hours</dt>
+        <dd style="margin:0;color:#e6e9ed">Sunday 8 AM – 1 PM<br><span style="font-size:14px;color:#8b95a1">Weekdays by appointment</span></dd>
+        <dt style="padding-top:4px;font-size:12px;font-weight:600;letter-spacing:.12em;color:#77808c;text-transform:uppercase">Social</dt>
+        <dd style="margin:0"><a href="https://instagram.com/precision_weldingsolutions" target="_blank">@precision_weldingsolutions</a></dd>
+      </dl>
+      <div style="position:relative;margin-top:36px;aspect-ratio:16/9;overflow:hidden;border:1px solid #1d2229;background:#161b22">
+        <iframe title="Map" src="https://www.google.com/maps?q=Precision%20Welding%20Solutions%2C%20Reece%20Rd%2C%20Bridgetown%2C%20Saint%20Thomas%2C%20Barbados&amp;z=16&amp;output=embed" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;border:0;filter:invert(.9) hue-rotate(180deg) saturate(.7) contrast(.95)"></iframe>
+      </div>
+    </div>
+    <form onSubmit="{{ onSubmit }}" style="display:flex;flex-direction:column;gap:16px;border:1px solid #1d2229;background:#0f1216;padding:36px">
+      <h3 style="margin:0 0 4px;font-family:Montserrat;font-size:20px;font-weight:700;color:#fff;text-transform:uppercase">Request a quote</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;letter-spacing:.06em;color:#8b95a1;text-transform:uppercase">Name<input required="" style="width:100%;background:#0a0b0d;border:1px solid #2a3340;border-radius:3px;color:#fff;padding:12px 14px;font-size:15px;letter-spacing:normal;text-transform:none" style-focus="border-color:#3b9dff;outline:none;box-shadow:0 0 0 1px #3b9dff"></label>
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;letter-spacing:.06em;color:#8b95a1;text-transform:uppercase">Phone / WhatsApp<input required="" type="tel" style="width:100%;background:#0a0b0d;border:1px solid #2a3340;border-radius:3px;color:#fff;padding:12px 14px;font-size:15px;letter-spacing:normal;text-transform:none" style-focus="border-color:#3b9dff;outline:none;box-shadow:0 0 0 1px #3b9dff"></label>
+      </div>
+      
+      <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;letter-spacing:.06em;color:#8b95a1;text-transform:uppercase">Describe the job<textarea rows="5" placeholder="What is it, what's wrong, material if you know it…" style="width:100%;background:#0a0b0d;border:1px solid #2a3340;border-radius:3px;color:#fff;padding:12px 14px;font-size:15px;letter-spacing:normal;text-transform:none;resize:vertical" style-focus="border-color:#3b9dff;outline:none;box-shadow:0 0 0 1px #3b9dff"></textarea></label>
+      <button type="submit" style="width:100%;border:0;background:#1e7fe0;color:#fff;font-weight:600;padding:16px;border-radius:4px;font-size:16px;cursor:pointer" style-hover="background:#3b9dff">{{ submitLabel }}</button>
+      <p style="margin:0;font-size:13px;color:#77808c">Photos help. Attach them on WhatsApp after you send this.</p>
+    </form>
+  </div>
+</section>
+
+<footer style="border-top:1px solid #1d2229;background:#050607;padding:72px 24px 40px;font-size:15px;color:#8b95a1">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));column-gap:40px;row-gap:48px;border-bottom:1px solid #1d2229;padding-bottom:48px">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <img src="assets/logo.png" alt="" style="width:48px;height:48px;flex:none;border-radius:50%;border:2px solid #1e7fe0;object-fit:cover;object-position:50% 40%">
+          <span style="font-family:Montserrat;font-weight:800;font-size:15px;line-height:1.1;letter-spacing:.02em;color:#fff">PRECISION<br><span style="font-size:9px;font-weight:600;letter-spacing:.28em;color:#3b9dff">WELDING SOLUTIONS</span></span>
+        </div>
+        <p style="margin:0;line-height:1.7;text-wrap:pretty;color:#aeb6c0">Welding and fabrication in Barbados. 20+ years of stronger connections, quality work and lasting solutions.</p>
+        <div style="line-height:1.6;color:#3b9dff">Reece Rd, Bridgetown,<br>St. Thomas, Barbados</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <h2 style="margin:0 0 6px;font-family:Montserrat;font-size:12px;font-weight:700;letter-spacing:.14em;color:#fff;text-transform:uppercase">Quick links</h2>
+        <a href="#top" style="color:#c9ced4;align-self:flex-start" style-hover="color:#fff">Home</a>
+        <a href="#services" style="color:#c9ced4;align-self:flex-start" style-hover="color:#fff">Services</a>
+        <a href="#about" style="color:#c9ced4;align-self:flex-start" style-hover="color:#fff">About</a>
+        <a href="#work" style="color:#c9ced4;align-self:flex-start" style-hover="color:#fff">Instagram feed</a>
+        <a href="#contact" style="color:#c9ced4;align-self:flex-start" style-hover="color:#fff">Contact</a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <h2 style="margin:0 0 6px;font-family:Montserrat;font-size:12px;font-weight:700;letter-spacing:.14em;color:#fff;text-transform:uppercase">Contact us</h2>
+        <a href="tel:+12462525877" style="display:inline-flex;align-items:center;gap:12px;align-self:flex-start;color:#c9ced4" style-hover="color:#fff"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b9dff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.9.6 2.8.7a2 2 0 0 1 1.8 2z"></path></svg>+1 (246) 252-5877</a>
+        <a href="https://wa.me/12462525877" target="_blank" style="display:inline-flex;align-items:center;gap:12px;align-self:flex-start;color:#c9ced4" style-hover="color:#fff"><svg width="18" height="18" viewBox="0 0 24 24" fill="#3b9dff"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.200 8.200 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.900c-.2-.4.3-.4.7-1.3.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.6 1.1 2.8c.1.2 1.9 2.9 4.6 4 1.7.7 2.3.8 3.2.7.5-.1 1.5-.6 1.8-1.3.2-.6.2-1.2.1-1.3 0-.1-.2-.2-.4-.3z"></path></svg>WhatsApp us</a>
+        <a href="https://instagram.com/precision_weldingsolutions" target="_blank" style="display:inline-flex;align-items:center;gap:12px;align-self:flex-start;color:#c9ced4" style-hover="color:#fff"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b9dff" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1" fill="#3b9dff" stroke="none"></circle></svg>@precision_weldingsolutions</a>
+        <div style="display:flex;align-items:center;gap:12px;color:#c9ced4"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b9dff" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>Sun 8 AM to 1 PM · Weekdays by appointment</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding-top:32px;text-align:center;font-size:14px;line-height:1.6">
+      <p style="margin:0;color:#c9ced4">© 2026 Precision Welding Solutions. All rights reserved.</p>
+      <p style="margin:0;letter-spacing:.04em;color:#3b9dff">Serving St. Thomas, Bridgetown &amp; All of Barbados</p>
+      <p style="margin:0;letter-spacing:.04em;color:#77808c">Designed &amp; Developed by <a href="https://becalmgroup.com" target="_blank" style="font-weight:600;color:#8b95a1" style-hover="color:#fff">beCALM Group LTD.</a></p>
+    </div>
+  </div>
+</footer>
+
+<sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+  <div style="height:72px;background:#050607"></div>
+  <div style="position:fixed;left:0;right:0;bottom:0;z-index:60;display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(10,11,13,.96);border-top:1px solid #1d2229;backdrop-filter:blur(10px)">
+    <a href="tel:+12462525877" style="display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;border:1px solid #3a424d;border-radius:4px;color:#fff;font-weight:600;font-size:15px">Call</a>
+    <a href="{{ wa }}" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;border-radius:4px;background:#25d366;color:#05210f;font-weight:700;font-size:15px">Send a photo</a>
+  </div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { sent: false, chip: 0, w: typeof window !== 'undefined' ? window.innerWidth : 1280 };
+  componentDidMount() {
+    this.onResize = () => this.setState({ w: window.innerWidth });
+    window.addEventListener('resize', this.onResize);
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); }
+  status() {
+    const now = new Date(Date.now() - 4 * 3600e3); // Barbados UTC-4
+    const d = now.getUTCDay(), h = now.getUTCHours();
+    if (d === 0 && h >= 8 && h < 13) return { label: 'Open now · until 1 PM', dot: '#25d366' };
+    return { label: 'Opens Sunday 8 AM', dot: '#e0a33b' };
+  }
+  renderVals() {
+    const wide = this.state.w >= 832;
+    const base = 'https://wa.me/12462525877';
+    const wa = (t) => base + '?text=' + encodeURIComponent(t);
+    const st = this.status();
+    const services = [
+      { title: 'Thread repairs', desc: 'Stripped, cross-threaded or damaged threads brought back to original spec.', methods: 'Heli-coil · Time-sert · Re-tap · Weld & re-cut' },
+      { title: 'Glow & spark plug removal', desc: 'Seized or snapped plugs extracted without pulling the head. Thread repaired if needed.', methods: 'Diesel · Petrol · Aluminum heads' },
+      { title: 'Aluminum welding', desc: 'TIG welding with clean beads and full penetration.', methods: 'Housings · Intakes · Tanks · Wheels · Castings' },
+      { title: 'Fabrication', desc: 'Custom, one-off parts built to last.', methods: 'Frames · Brackets · Gates · Racks · Steel, stainless & aluminum' },
+      { title: 'Flange & exhaust work', desc: 'V-band conversions, flange changes and manifold repairs.', methods: 'V-band · Flanges · Broken ears · Manifolds' },
+      { title: 'Mobile / on-site', desc: "Can't bring it in? On-site welding and repair anywhere in Barbados.", methods: 'Equipment · Gates · Structures · By arrangement' },
+    ].map((s, i) => ({ ...s, num: String(i + 1).padStart(2, '0'), wa: wa(`Hi Kris, I need help with: ${s.title}. Photo attached.`) }));
+    const chipLabels = ['Thread repair', 'Plug removal', 'Aluminum', 'Fabrication', 'Flange / exhaust', 'On-site', 'Not sure'];
+    return {
+      wide, narrow: !wide, xl: this.state.w >= 1100, whyCols: this.state.w >= 1100 ? 'repeat(4,minmax(0,1fr))' : this.state.w >= 560 ? 'repeat(2,minmax(0,1fr))' : 'minmax(0,1fr)',
+      wa: wa('Hi Kris, here is a photo of the part.'),
+      statusLabel: st.label, statusDot: st.dot,
+      heroPos: wide ? '70% 45%' : '40% 45%',
+      heroScrim: wide
+        ? 'linear-gradient(90deg,rgba(10,11,13,.95) 0%,rgba(10,11,13,.8) 38%,rgba(10,11,13,.25) 75%,rgba(10,11,13,.1) 100%),linear-gradient(0deg,rgba(10,11,13,.7),transparent 40%)'
+        : 'linear-gradient(180deg,rgba(10,11,13,.35) 0%,rgba(10,11,13,.65) 40%,rgba(10,11,13,.95) 100%)',
+      services,
+      aboutPoints: ['Welding + fabrication in one shop', 'Steel, stainless & aluminum', 'Straight answers, honest pricing', 'Photos quoted over WhatsApp'],
+      reasons: [
+        { num: '01', title: 'Repaired to spec', desc: 'Not a patch job. Threads, fits and welds brought back to original tolerance so the fix holds.', src: 'assets/boat-rail-weld.jpg', pos: '50% 30%', job: 'TIG · boat rail mount', alt: 'TIG-welding a rail mount on a fishing boat' },
+        { num: '02', title: 'Saves the part', desc: 'Seized plugs, snapped studs and cracked castings recovered instead of replaced. Cheaper than a new head or housing.', src: 'assets/hero-cutting-poster.jpg', pos: '40% 45%', job: 'Cutting stock in the shop', alt: 'Torch-cutting steel in the shop' },
+        { num: '03', title: 'One point of contact', desc: 'You deal with Kris from quote to pickup. No handoffs, no surprises.', src: 'assets/frame-job.png', pos: '50% 50%', job: 'Fabrication · steel frame', alt: 'Custom welded steel frame' },
+        { num: '04', title: 'Local, island-wide', desc: 'Based in St. Thomas, five minutes from Bridgetown. Mobile service anywhere in Barbados.', src: 'assets/ibeam-weld.jpg', pos: '50% 40%', job: 'On-site · steel I-beam', alt: 'Stick-welding a steel I-beam on site' },
+      ],
+      igPosts: [
+        { caption: 'Remove seized or broken glow plugs. Spark plugs also. Thread repairs.' },
+        { caption: 'No threads? Internal nut broken off.' },
+        { caption: 'Tap & drill chart: fractional / wire / letter / metric' },
+        { caption: 'Changing flange to a V-band flange' },
+        { caption: "Broken ear? Don't fear. We gone clear." },
+        { caption: 'Failed universal joint?' },
+      ],
+      chips: chipLabels.map((label, i) => ({
+        label, pick: () => this.setState({ chip: i }),
+        bg: this.state.chip === i ? 'rgba(30,127,224,.18)' : 'transparent',
+        border: this.state.chip === i ? '#3b9dff' : '#2a3340',
+      })),
+      submitLabel: this.state.sent ? 'Sent. Kris will be in touch' : 'Send request',
+      onSubmit: (e) => { e.preventDefault(); this.setState({ sent: true }); },
+    };
+  }
+}
+</script>
+</body>
+</html>

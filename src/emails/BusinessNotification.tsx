@@ -17,7 +17,6 @@ import * as React from "react";
 export interface BusinessNotificationProps {
   name: string;
   phone: string;
-  service: string;
   details: string;
   /** Public site origin, for the logo and footer links. */
   siteUrl: string;
@@ -43,21 +42,18 @@ export default function BusinessNotification(props: BusinessNotificationProps) {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(props.receivedAt));
-  const replyText = `Hi ${firstName}, this is Kris from Precision Welding Solutions about your ${props.service.toLowerCase()} request.`;
+  const replyText = `Hi ${firstName}, this is Kris from Precision Welding Solutions about your quote request.`;
   const waHref = `https://wa.me/${whatsappDigits(props.phone)}?text=${encodeURIComponent(replyText)}`;
   const rows: [string, string][] = [
     ["Name", props.name],
     ["Phone / WhatsApp", props.phone],
-    ["Service", props.service],
     ["Received", `${received} (Barbados)`],
   ];
 
   return (
     <Html lang="en">
       <Head />
-      <Preview>
-        {`${props.name} wants a quote for ${props.service.toLowerCase()}. Reply on WhatsApp: ${props.phone}`}
-      </Preview>
+      <Preview>{`${props.name} wants a quote. Reply on WhatsApp: ${props.phone}`}</Preview>
       <Body style={body}>
         <Container style={container}>
           <Section style={header}>
@@ -77,9 +73,7 @@ export default function BusinessNotification(props: BusinessNotificationProps) {
             <Heading as="h1" style={heading}>
               {props.name}
             </Heading>
-            <Text style={sub}>
-              {props.service} · {props.phone}
-            </Text>
+            <Text style={sub}>Quote request · {props.phone}</Text>
             <Hr style={rule} />
             {rows.map(([k, v]) => (
               <table key={k} width="100%" cellPadding={0} cellSpacing={0} role="presentation" style={row}>
