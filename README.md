@@ -39,7 +39,7 @@ To swap a photo:
 2. Change that image's `src` in `src/content.ts` (in `images`, or in a `reasons` entry for the Why-us cards). Adjust `position` (CSS `object-position`) if the crop needs to move.
 3. Set `src: null` to show the dark captioned placeholder instead.
 
-All photos are Kris's own (sent over WhatsApp, which strips location data).
+Every photo shows Kris's own work (sent over WhatsApp, which strips location data).
 
 | Slot | Current file | What it is |
 | --- | --- | --- |
@@ -47,8 +47,8 @@ All photos are Kris's own (sent over WhatsApp, which strips location data).
 | `images.about` | `kris-marina.jpg` | Kris on a marina dock with his TIG torch (4:5 crop) |
 | `images.contactBg` | `shop-front.jpg` | The shop on Reece Rd. Fixed behind the Contact section |
 | `reasons[0].image` | `boat-rail-weld.jpg` | Why us 01: TIG-welding a rail mount on a fishing boat |
-| `reasons[1].image` | `hero-cutting-poster.jpg` | Why us 02: torch-cutting stock in the shop |
-| `reasons[2].image` | `frame-job.png` | Why us 03: a welded steel frame. Only 400×180 (from the Google Maps listing), so it's soft in a 4:5 card: replace with the original photo |
+| `reasons[1].image` | `aluminum-frame-weld.jpg` | Why us 02: TIG-welding an aluminum frame at the bench |
+| `reasons[2].image` | `vertical-weld.jpg` | Why us 03: TIG-welding a vertical joint, filler rod in hand |
 | `reasons[3].image` | `ibeam-weld.jpg` | Why us 04: stick-welding a steel I-beam on site |
 | `images.share` | `og-cutting.jpg` | Photo half of the link-preview card |
 | `images.logo` | `logo.png` | The logo on black (round avatars, email header, structured data) |
