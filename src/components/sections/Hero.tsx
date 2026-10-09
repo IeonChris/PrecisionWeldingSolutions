@@ -7,9 +7,11 @@ import { WhatsAppIcon } from "@/components/Icons";
 export function Hero() {
   const panel = heroVideo?.desktopLayout === "panel";
   return (
+    // Fills the screen below the 69px nav (and, under 832px, above the 69px Call / Send a photo bar),
+    // so no strip of the next section shows under it. Never shorter than 560px.
     <section
       aria-labelledby="hero-title"
-      className="relative flex min-h-[clamp(560px,82vh,760px)] items-end overflow-hidden bg-base"
+      className="relative flex min-h-[max(560px,calc(100svh-138px))] items-end overflow-hidden bg-base nav:min-h-[max(560px,calc(100svh-69px))]"
     >
       <HeroMedia
         video={heroVideo}

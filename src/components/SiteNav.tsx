@@ -43,7 +43,7 @@ export function SiteNav() {
   }, [open]);
 
   return (
-    <header id="top" className="sticky top-0 z-50">
+    <header className="sticky top-0 z-50">
       <nav
         aria-label="Main"
         className="relative z-[2] border-b border-line bg-[rgba(10,11,13,0.92)] backdrop-blur-[10px]"

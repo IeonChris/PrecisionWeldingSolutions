@@ -26,6 +26,9 @@ export default async function HomePage() {
       >
         Skip to content
       </a>
+      {/* Target of the logo and footer "Home" links. Not the sticky header: once stuck it is always on
+          screen, so the browser wouldn't scroll to it. */}
+      <div id="top" />
       <SiteNav />
       <main id="main">
         <Hero />
