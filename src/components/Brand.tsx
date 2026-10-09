@@ -52,18 +52,3 @@ export function Brand({ variant }: BrandProps) {
     </>
   );
 }
-
-/** Larger ringed avatar used beside the Instagram heading. */
-export function LogoRing() {
-  return (
-    <Image
-      src={images.logo.src}
-      alt=""
-      width={82}
-      height={82}
-      sizes="82px"
-      className="h-[64px] w-[64px] shrink-0 rounded-full border-[3px] border-blue bg-base object-cover p-[2px] sm:h-[82px] sm:w-[82px]"
-      style={{ objectPosition: "50% 38%" }}
-    />
-  );
-}

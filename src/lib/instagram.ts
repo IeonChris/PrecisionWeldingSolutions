@@ -2,7 +2,7 @@ import "server-only";
 import { business, instagramFallbackPosts } from "@/content";
 
 /**
- * Latest Instagram posts for the #work grid.
+ * Latest Instagram posts for the #work ring.
  *
  * Sources, first configured wins:
  *   1. INSTAGRAM_FEED_URL      a Behold (behold.so) JSON feed. Behold refreshes the Instagram token for you.
@@ -10,7 +10,8 @@ import { business, instagramFallbackPosts } from "@/content";
  *                              Expires after 60 days unless refreshed: see `npm run instagram:refresh`.
  * Anything missing or failing falls back to `instagramFallbackPosts` in src/content.ts.
  *
- * Requests are cached by Next and re-fetched at most every INSTAGRAM_REVALIDATE_SECONDS (ISR).
+ * Runs on the server only: the token never reaches the browser, which gets just the post fields below.
+ * Requests are cached by Next (ISR): see the *_REVALIDATE_SECONDS constants.
  */
 
 export interface FeedPost {
@@ -25,14 +26,19 @@ export interface FeedPost {
 
 export type FeedSource = "behold" | "instagram" | "fallback";
 
+/** Instagram API: refreshed hourly. `revalidate` in src/app/page.tsx matches (Next needs a literal there). */
+export const INSTAGRAM_REVALIDATE_SECONDS = 3600;
 /**
- * Behold's free plan updates the feed once a day and allows 1,200 feed requests a month, so asking every
- * 3 hours (at most ~250 requests a month) keeps the grid current with room to spare. Keep `revalidate`
- * in src/app/page.tsx in step (Next needs a literal there).
+ * Behold's free plan updates the feed once a day and allows 1,200 feed requests a month, so its response
+ * is kept for 3 hours (at most ~250 requests a month) even though the page itself refreshes hourly.
  */
-export const INSTAGRAM_REVALIDATE_SECONDS = 10800;
+const BEHOLD_REVALIDATE_SECONDS = 10800;
 const GRAPH_API = "https://graph.instagram.com/v25.0";
-const LIMIT = 6;
+/**
+ * Most posts the ring shows. The ring sizes itself to however many come back (Behold's free plan sends 6);
+ * past ~12 it turns into a wide, shallow arc, so raise this with the design in mind.
+ */
+export const MAX_POSTS = 12;
 
 /** First line of the caption, hashtags stripped, trimmed to fit a tile. */
 export function tidyCaption(raw: string | null | undefined, max = 90): string {
@@ -60,7 +66,7 @@ interface GraphMedia {
 async function fromInstagram(token: string): Promise<FeedPost[]> {
   const url = new URL(`${GRAPH_API}/me/media`);
   url.searchParams.set("fields", "id,caption,media_type,media_url,thumbnail_url,permalink");
-  url.searchParams.set("limit", String(LIMIT));
+  url.searchParams.set("limit", String(MAX_POSTS));
   url.searchParams.set("access_token", token);
   const res = await fetch(url, { next: { revalidate: INSTAGRAM_REVALIDATE_SECONDS, tags: ["instagram"] } });
   if (!res.ok) throw new Error(`Instagram API responded ${res.status}`);
@@ -92,17 +98,17 @@ interface BeholdPost {
   sizes?: Partial<Record<"small" | "medium" | "large" | "full", BeholdSize>>;
 }
 
-/** Smallest Behold rendition still sharp on a ~200px square tile at 2x. Tiles crop to the shorter side. */
+/** Smallest Behold rendition still sharp on a 260px square ring tile at 2x. Tiles crop to the shorter side. */
 function beholdImage(p: BeholdPost): string | null {
   const sizes = p.sizes ?? {};
   const pick =
-    [sizes.small, sizes.medium, sizes.large, sizes.full].find((s) => s && Math.min(s.width, s.height) >= 400) ??
+    [sizes.small, sizes.medium, sizes.large, sizes.full].find((s) => s && Math.min(s.width, s.height) >= 520) ??
     sizes.full;
   return pick?.mediaUrl ?? (p.mediaType === "VIDEO" ? p.thumbnailUrl : p.mediaUrl) ?? null;
 }
 
 async function fromBehold(feedUrl: string): Promise<FeedPost[]> {
-  const res = await fetch(feedUrl, { next: { revalidate: INSTAGRAM_REVALIDATE_SECONDS, tags: ["instagram"] } });
+  const res = await fetch(feedUrl, { next: { revalidate: BEHOLD_REVALIDATE_SECONDS, tags: ["instagram"] } });
   if (!res.ok) throw new Error(`Behold feed responded ${res.status}`);
   const json = (await res.json()) as { posts?: BeholdPost[] } | BeholdPost[];
   const posts = Array.isArray(json) ? json : (json.posts ?? []);
@@ -133,10 +139,10 @@ export async function getInstagramFeed(): Promise<{ posts: FeedPost[]; source: F
   try {
     if (feedUrl) {
       const posts = await fromBehold(feedUrl);
-      if (posts.length > 0) return { posts: posts.slice(0, LIMIT), source: "behold" };
+      if (posts.length > 0) return { posts: posts.slice(0, MAX_POSTS), source: "behold" };
     } else if (token) {
       const posts = await fromInstagram(token);
-      if (posts.length > 0) return { posts: posts.slice(0, LIMIT), source: "instagram" };
+      if (posts.length > 0) return { posts: posts.slice(0, MAX_POSTS), source: "instagram" };
     }
   } catch (err) {
     // Never log the request URL: it carries the access token.

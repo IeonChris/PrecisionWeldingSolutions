@@ -33,6 +33,13 @@
   /* The nav's "closed" status dot only. */
   --color-amber: #e0a33b;
 
+  /* Instagram ring section (#work). `ig-blue` with white text is 4.64:1. */
+  --color-ig-bg: #0b0e13;
+  --color-ig-line: #1a2029;
+  --color-ig-blue: #1f74d6;
+  --color-ig-blue-hover: #2b86f0;
+  --color-ig-eyebrow: #5aa2ff;
+
   /* Text */
   --color-fg: #e6e9ed;
   --color-silver: #c9ced4;
@@ -377,6 +384,76 @@
   transform: translateY(-6px) rotate(-45deg);
 }
 
+/*
+ * Instagram ring (#work, InstagramRing.tsx). The ring is a zero-size preserve-3d box; each tile sits at
+ * rotateY(i × 360°/slots) translateZ(R), with R = (tile/2) / tan(180°/slots) + gap so neighbours never
+ * overlap. JS reads --tile and --gap to work out the same R and spins the ring each frame. The 3D
+ * properties are also set inline with their -webkit- twins for iOS Safari.
+ */
+.ig-stage {
+  --ig-persp: 1900px;
+  position: relative;
+  overflow: hidden;
+  cursor: grab;
+  /* Horizontal drags turn the ring; vertical swipes still scroll the page on touch screens. */
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.ig-stage[data-dragging="true"] {
+  cursor: grabbing;
+}
+.ig-ring {
+  --tile: 260px;
+  --gap: 40px;
+  --r: calc(var(--tile) / 2 / tan(180deg / var(--slots)) + var(--gap));
+  position: absolute;
+  top: 44%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ig-tile {
+  position: absolute;
+  top: calc(var(--tile) / -2);
+  left: calc(var(--tile) / -2);
+  width: var(--tile);
+  height: var(--tile);
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px rgba(120, 170, 255, 0.3);
+  transform: rotateY(calc(var(--i) * 360deg / var(--slots))) translateZ(var(--r));
+}
+.ig-caption {
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-spring);
+}
+.ig-tile:hover .ig-caption,
+.ig-tile:focus-within .ig-caption {
+  opacity: 1;
+}
+@supports (-webkit-box-reflect: below 0) {
+  @media (min-width: 37.5rem) {
+    .ig-tile {
+      -webkit-box-reflect: below 14px linear-gradient(transparent 55%, rgba(255, 255, 255, 0.22));
+    }
+  }
+}
+@media (max-width: 56.24rem) {
+  .ig-ring {
+    --tile: 180px;
+    --gap: 28px;
+  }
+}
+@media (max-width: 37.49rem) {
+  .ig-stage {
+    --ig-persp: 1200px;
+  }
+}
+
 /* Floating WhatsApp button lift. */
 .fab {
   transition: transform 0.45s var(--ease-spring);
@@ -393,7 +470,8 @@
   .menu-panel,
   .menu-panel[data-open="false"],
   .menu-bar,
-  .fab {
+  .fab,
+  .ig-caption {
     transition: none;
   }
   .btn {

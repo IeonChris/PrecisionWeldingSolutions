@@ -1,9 +1,7 @@
 import Image from "next/image";
-import { business, instagramIntro } from "@/content";
+import { business, images, instagramIntro } from "@/content";
 import type { FeedPost } from "@/lib/instagram";
-import { LogoRing } from "@/components/Brand";
-import { ImagePlaceholder } from "@/components/ImagePlaceholder";
-import { PlayBadge } from "@/components/Icons";
+import { InstagramRing } from "@/components/InstagramRing";
 
 export function InstagramFeed({ posts }: { posts: FeedPost[] }) {
   const { handle, url } = business.instagram;
@@ -12,75 +10,45 @@ export function InstagramFeed({ posts }: { posts: FeedPost[] }) {
     <section
       id="work"
       aria-labelledby="work-title"
-      className="section-pad cv-auto border-t border-line bg-panel px-6 [--cv-h:670px] md:[--cv-h:600px] lg:[--cv-h:410px]"
+      className="cv-auto flex flex-col overflow-hidden border-y border-ig-line bg-ig-bg [--cv-h:620px] min-[900px]:h-[820px] min-[900px]:[--cv-h:818px]"
     >
-      <div className="mx-auto max-w-[1200px]">
-        <div className="mb-10 flex flex-wrap items-center justify-between gap-6">
-          <div className="flex min-w-0 items-center gap-[14px] sm:gap-[18px]">
-            <LogoRing />
-            <div className="min-w-0">
-              <p className="eyebrow m-0 mb-[6px]">{instagramIntro.eyebrow}</p>
-              <h2
-                id="work-title"
-                className="display m-0 text-[clamp(18px,2.4vw,30px)] leading-[1.05] text-pretty [overflow-wrap:anywhere] max-[359px]:text-[16px]"
-              >
-                {/* Allow the handle to break after the underscore on narrow phones. */}@{first}_
-                <wbr />
-                {rest.join("_")}
-              </h2>
-            </div>
+      <div className="flex flex-col gap-6 px-6 pt-14 min-[900px]:flex-row min-[900px]:items-center min-[900px]:justify-between min-[900px]:gap-8 min-[900px]:px-24 min-[900px]:pt-[72px]">
+        <div className="flex min-w-0 items-center gap-4 sm:gap-5">
+          <Image
+            src={images.logo.src}
+            alt=""
+            width={84}
+            height={84}
+            sizes="84px"
+            className="h-[84px] w-[84px] shrink-0 rounded-full border-[3px] border-ig-blue bg-base object-cover p-[2px]"
+            style={{ objectPosition: "50% 38%" }}
+          />
+          <div className="min-w-0">
+            <p className="m-0 mb-2 font-display text-[13px] font-semibold tracking-[0.24em] text-ig-eyebrow uppercase">
+              {instagramIntro.eyebrow}
+            </p>
+            {/* The handle is ~19× its font size wide, so it scales to fill the room beside the avatar (and, from
+                900px, the button) on one line, up to 38px. On narrow phones it breaks after the underscore. */}
+            <h2
+              id="work-title"
+              className="m-0 font-display text-[clamp(19px,calc((100vw-152px)/19),38px)] leading-[1.05] font-extrabold text-white uppercase [overflow-wrap:anywhere] max-[379px]:text-[17px] min-[900px]:text-[clamp(24px,calc((100vw-551px)/19),38px)]"
+            >
+              @{first}_
+              <wbr />
+              {rest.join("_")}
+            </h2>
           </div>
-          <a
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-primary whitespace-nowrap px-[22px] py-3 text-[15px] max-xs:w-full"
-          >
-            {instagramIntro.button}
-          </a>
         </div>
-
-        <ul className="m-0 grid list-none grid-cols-2 gap-[10px] p-0 sm:grid-cols-[repeat(auto-fill,minmax(180px,1fr))]">
-          {posts.map((post) => (
-            <li key={post.id}>
-              <a
-                href={post.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative block aspect-square overflow-hidden bg-base active:opacity-90"
-              >
-                <span className="absolute inset-0 transition-transform duration-700 ease-spring group-hover:scale-[1.045] group-focus-visible:scale-[1.045]">
-                  {post.image ? (
-                    <Image
-                      src={post.image}
-                      alt=""
-                      fill
-                      sizes="(min-width: 1248px) 193px, (min-width: 640px) 25vw, 50vw"
-                      unoptimized={!post.optimize}
-                      className="object-cover"
-                    />
-                  ) : (
-                    <ImagePlaceholder caption={post.caption} showCaption={false} />
-                  )}
-                </span>
-                {post.isVideo ? <PlayBadge /> : null}
-                {/* The strip is near-solid behind the text: reels often have their own text burned in at the
-                    bottom. Posts without a caption get no strip, only the screen-reader name. */}
-                {post.caption ? (
-                  <span className="pointer-events-none absolute inset-x-0 bottom-0 bg-[linear-gradient(rgba(10,11,13,0),rgba(10,11,13,0.88)_22px,rgba(10,11,13,0.94))] px-3 pt-6 pb-[10px] text-[13px] leading-[1.35] font-medium text-fg">
-                    <span className="line-clamp-3">
-                      <span className="sr-only">{instagramIntro.postLabel}: </span>
-                      {post.caption}
-                    </span>
-                  </span>
-                ) : (
-                  <span className="sr-only">{instagramIntro.postLabel}</span>
-                )}
-              </a>
-            </li>
-          ))}
-        </ul>
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn shrink-0 self-start rounded-[6px] bg-ig-blue px-[26px] py-4 font-display text-[16px] font-bold whitespace-nowrap text-white hover:bg-ig-blue-hover hover:text-white focus-visible:bg-ig-blue-hover focus-visible:text-white active:bg-blue-strong min-[900px]:self-center max-xs:w-full"
+        >
+          {instagramIntro.button}
+        </a>
       </div>
+      <InstagramRing posts={posts} />
     </section>
   );
 }

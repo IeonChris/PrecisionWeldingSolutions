@@ -12,8 +12,8 @@ import { WhyUs } from "@/components/sections/WhyUs";
 import { InstagramFeed } from "@/components/sections/InstagramFeed";
 import { Contact } from "@/components/sections/Contact";
 
-/** Static page, regenerated at most every 3 hours so the Instagram grid stays current. Matches INSTAGRAM_REVALIDATE_SECONDS. */
-export const revalidate = 10800;
+/** Static page, regenerated at most hourly so the Instagram ring stays current. Matches INSTAGRAM_REVALIDATE_SECONDS. */
+export const revalidate = 3600;
 
 export default async function HomePage() {
   const feed = await getInstagramFeed();

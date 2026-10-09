@@ -11,7 +11,7 @@ The approved design is the v3 redesign, `design_handoff/Redesign v3.dc.html`. Th
 | Framework | Next.js 15 (App Router), TypeScript, React 19 |
 | Styling | Tailwind CSS v4. The design tokens in `src/app/globals.css` are the only colours; Tailwind's default palette is disabled |
 | Fonts | Montserrat (headings) and Open Sans (body) from Google Fonts through `next/font`, self-hosted at build time with `display: swap` |
-| Page | `/` is static and regenerated at most every 3 hours (ISR) so the Instagram grid stays fresh |
+| Page | `/` is static and regenerated at most hourly (ISR) so the Instagram ring stays fresh |
 | Form | Server action (`src/app/actions/quote.ts`): zod validation, honeypot, per-IP rate limit, email to the owner through Resend with a React Email template |
 | Hosting | Vercel |
 
@@ -76,7 +76,11 @@ ffmpeg -i input.mp4 -filter_complex "[0:v]split=2[a][b];[a]trim=start=2.8:end=9.
 
 ## Instagram feed (#work)
 
-The grid shows the six latest posts. Each tile links to the post, shows a play badge on videos and the first line of the caption (hashtags removed) on a dark strip; posts without a caption show just the picture. Posts are fetched on the server and cached for 3 hours (`INSTAGRAM_REVALIDATE_SECONDS` in `src/lib/instagram.ts`, kept in step with `revalidate` in `src/app/page.tsx`). With no feed configured, or if the feed fails, the six captions in `instagramFallbackPosts` (`src/content.ts`) are shown as dark placeholders.
+The latest posts turn slowly on a 3D ring (`src/components/InstagramRing.tsx`, styles under "Instagram ring" in `globals.css`). Visitors can drag it (with a little momentum), hovering a tile pauses it, and keyboard users can Tab to a tile, which turns to the front, then use ←/→ to step round. Each tile opens its post in a new tab (unless the press was a drag), shows a play badge on videos, and reveals the first line of the caption (hashtags removed) on hover or focus. With "reduce motion" switched on, the ring only moves when dragged.
+
+The ring sizes itself to however many posts come back, up to `MAX_POSTS` (12) in `src/lib/instagram.ts`. With 8 or fewer, each post appears twice (the copy is always on the hidden back side) so the ring has enough tiles to read as a ring: Behold's free plan sends 6, which fills 12 slots. Past ~12 posts the ring turns into a wide, shallow arc; raise `MAX_POSTS` with that in mind.
+
+Posts are fetched on the server (the Instagram token never reaches the browser). The page refreshes hourly (`INSTAGRAM_REVALIDATE_SECONDS`, kept in step with `revalidate` in `src/app/page.tsx`); a Behold response is kept for 3 hours. With no feed configured, or if the feed fails, the six captions in `instagramFallbackPosts` (`src/content.ts`) are shown as dark placeholders.
 
 **Option A: Behold (recommended, no upkeep).**
 
@@ -84,7 +88,7 @@ The grid shows the six latest posts. Each tile links to the post, shows a play b
 2. Create a feed, choose **JSON** as the output, and copy the feed URL (`https://feeds.behold.so/…`).
 3. Set `INSTAGRAM_FEED_URL` to that URL. Behold handles Instagram's token refreshes.
 
-Behold's free plan updates the feed once a day, returns up to six posts, and allows 1,200 feed requests a month (every request to the JSON URL counts; images don't). Asking every 3 hours uses at most ~250 of them. On a paid plan with hourly updates, lower both refresh values to `3600`.
+Behold's free plan updates the feed once a day, returns up to six posts, and allows 1,200 feed requests a month (every request to the JSON URL counts; images don't). Keeping its response for 3 hours uses at most ~250 of them. Paid plans send more posts (Starter, $10/month: 50, updated hourly); on one, `BEHOLD_REVALIDATE_SECONDS` can drop to `3600`.
 
 **Option B: Instagram API directly.**
 
@@ -92,6 +96,8 @@ Behold's free plan updates the feed once a day, returns up to six posts, and all
 2. In the Meta developer dashboard, create a Business app with the *Instagram API with Instagram Login* product, add the account as a tester, and generate a long-lived access token (scope `instagram_business_basic`).
 3. Set `INSTAGRAM_ACCESS_TOKEN`.
 4. The token expires 60 days after it is issued or refreshed. Before then, run `npm run instagram:refresh`, which prints a new token and its expiry date, and paste it into Vercel. A calendar reminder at ~50 days works. If it lapses, the site quietly falls back to the static posts.
+
+The API can return any of the account's posts (up to its 10,000 most recent); the site asks for `MAX_POSTS`.
 
 If both variables are set, Behold wins.
 
@@ -121,8 +127,8 @@ Copy `.env.local.example` to `.env.local` for local development and add the same
 | `RESEND_API_KEY` | Quote emails | From resend.com |
 | `QUOTE_TO` | Quote emails | Recipient address(es) |
 | `EMAIL_FROM` | Quote emails | Sender on a Resend-verified domain. Unset = sandbox sender |
-| `INSTAGRAM_FEED_URL` | Instagram grid (Option A) | Behold JSON feed URL |
-| `INSTAGRAM_ACCESS_TOKEN` | Instagram grid (Option B) | Long-lived token, refreshed every < 60 days |
+| `INSTAGRAM_FEED_URL` | Instagram ring (Option A) | Behold JSON feed URL |
+| `INSTAGRAM_ACCESS_TOKEN` | Instagram ring (Option B) | Long-lived token, refreshed every < 60 days |
 | `PING_SECRET` | `/api/seo/ping` | Any long random string. `.env.local` already has one for local use |
 
 ## SEO
@@ -167,7 +173,7 @@ At 1280px the page matches `design_handoff/Redesign v3.dc.html` to within a pixe
 3. **Services**: sticky intro on the left (from 768px), and a list of rows on the right; each row opens WhatsApp prefilled with that service.
 4. **About**: Kris's photo and story.
 5. **Why us**: four reasons, each with one of Kris's job photos.
-6. **Instagram** (#work): the live feed (see above).
+6. **Instagram** (#work): the live feed on a turning 3D ring (see above).
 7. **Contact**: details, map and the quote form over the fixed shop-front photo.
 8. **Footer**, then the **mobile action bar** (Call / Send a photo, below 832px only, with a 72px spacer so it never covers the footer). The floating WhatsApp button shows from 832px up.
 
@@ -181,4 +187,4 @@ At 1280px the page matches `design_handoff/Redesign v3.dc.html` to within a pixe
 
 - Contact keeps its photo still while the text scrolls: the section has `clip-path: inset(0)` and the photo sits in a `position: fixed` layer (`src/components/FixedBackground.tsx`). This works on iOS, unlike `background-attachment: fixed`.
 - Below-the-fold blocks use `content-visibility: auto` (`cv-auto`) so phones skip laying them out until they near the screen; each has a `--cv-h` height estimate per breakpoint (measured; it only affects the scrollbar before the block renders). Never put `cv-auto` on a `.fixed-bg` section itself; it would break the fixed photo.
-- Other choices: the Instagram grid is two columns on phones, the Google map has a dark filter to match the page, and anchor links stop 80px below the top so the sticky nav never covers a heading.
+- Other choices: the Google map has a dark filter to match the page, and anchor links stop 80px below the top so the sticky nav never covers a heading.
