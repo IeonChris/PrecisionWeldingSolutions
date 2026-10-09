@@ -20,15 +20,13 @@ const EYEBROW = "St. Thomas, Barbados";
 const SERVICES = "Welding · Fabrication · Repairs";
 const CTA = `WhatsApp ${business.phone.display}`;
 
-/** Fetches a Google Font as TTF, subset to the characters actually drawn. */
-async function googleFont(family: string, weight: number, text: string): Promise<ArrayBuffer | null> {
+/**
+ * A TTF from src/assets/fonts (OFL, licences beside them). Kept in the repo rather than fetched from
+ * Google Fonts at build time: a failed download on Vercel left no fonts and broke the build.
+ */
+async function localFont(file: string): Promise<Buffer | null> {
   try {
-    const api = `https://fonts.googleapis.com/css2?family=${family}:wght@${weight}&text=${encodeURIComponent(text)}`;
-    const css = await (await fetch(api)).text();
-    const src = css.match(/src: url\((.+?)\) format\('(opentype|truetype)'\)/);
-    if (!src) return null;
-    const res = await fetch(src[1]);
-    return res.ok ? await res.arrayBuffer() : null;
+    return await readFile(path.join(process.cwd(), "src", "assets", "fonts", file));
   } catch {
     return null;
   }
@@ -48,18 +46,19 @@ async function publicImage(src: string | null): Promise<string | null> {
 
 /** Branded 1200×630 card: Kris's spark shower on the left fading into black, logo and hero line on the right. */
 export default async function OpenGraphImage() {
-  const displayText = [...HEADLINE, ACCENT, EYEBROW, SERVICES].join(" ").toUpperCase();
   const [logo, photo, montserrat, openSans] = await Promise.all([
     publicImage(images.logo.src),
     publicImage(images.share.src),
-    googleFont("Montserrat", 800, displayText),
-    googleFont("Open+Sans", 600, CTA),
+    localFont("Montserrat-ExtraBold.ttf"),
+    localFont("OpenSans-SemiBold.ttf"),
   ]);
 
   const fonts = [
     ...(montserrat ? [{ name: "Montserrat", data: montserrat, weight: 800 as const, style: "normal" as const }] : []),
     ...(openSans ? [{ name: "Open Sans", data: openSans, weight: 600 as const, style: "normal" as const }] : []),
   ];
+  // An empty list would replace next/og's built-in font and fail the build, so leave it out instead.
+  if (fonts.length === 0) console.warn("[og] fonts missing from src/assets/fonts; using the default font");
 
   const png = new ImageResponse(
     (
@@ -76,7 +75,7 @@ export default async function OpenGraphImage() {
       >
         <div style={{ display: "flex", position: "relative", width: 480, height: 630 }}>
           {photo ? (
-            // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
+            // eslint-disable-next-line jsx-a11y/alt-text
             <img src={photo} width={480} height={630} style={{ objectFit: "cover" }} />
           ) : null}
           <div
@@ -94,7 +93,7 @@ export default async function OpenGraphImage() {
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", flex: 1, padding: "0 64px 0 28px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 18, marginBottom: 28 }}>
             {logo ? (
-              // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
+              // eslint-disable-next-line jsx-a11y/alt-text
               <img src={logo} width={84} height={84} style={{ borderRadius: 84, border: "2px solid #1e7fe0" }} />
             ) : null}
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -161,7 +160,7 @@ export default async function OpenGraphImage() {
         </div>
       </div>
     ),
-    { ...size, fonts },
+    { ...size, ...(fonts.length ? { fonts } : {}) },
   );
 
   const jpeg = await sharp(Buffer.from(await png.arrayBuffer()))

@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { instagramIntro } from "@/content";
 import type { FeedPost } from "@/lib/instagram";
 import { ImagePlaceholder } from "@/components/ImagePlaceholder";
 import { PlayBadge } from "@/components/Icons";
+import { MotionToggle } from "@/components/MotionToggle";
 
 /** Auto-rotation in degrees per frame at 60 fps (scaled by frame time, so 120 Hz screens spin at the same speed). */
 const AUTO_DEG_PER_FRAME = 0.12;
@@ -31,6 +32,16 @@ function frontCopy(post: number, count: number, step: number, angle: number): nu
 export function InstagramRing({ posts }: { posts: FeedPost[] }) {
   const stageRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLUListElement>(null);
+  // Pause/play (WCAG 2.2.2). Starts paused under "reduce motion"; dragging works either way.
+  const [paused, setPaused] = useState(false);
+  const pausedRef = useRef(false);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) setPaused(true);
+  }, []);
+  useEffect(() => {
+    pausedRef.current = paused;
+  }, [paused]);
 
   const doubled = posts.length > 0 && posts.length < DOUBLE_UP_BELOW;
   const slots = doubled ? [...posts, ...posts] : posts;
@@ -104,7 +115,7 @@ export function InstagramRing({ posts }: { posts: FeedPost[] }) {
         pendingDx = 0;
         angle += velocity;
       } else {
-        const auto = reduced.matches || hovering || focusWithin ? 0 : AUTO_DEG_PER_FRAME * SPEED;
+        const auto = pausedRef.current || hovering || focusWithin ? 0 : AUTO_DEG_PER_FRAME * SPEED;
         velocity += (auto - velocity) * (1 - Math.pow(1 - EASE_BACK, dt));
         angle += velocity * dt;
       }
@@ -138,6 +149,7 @@ export function InstagramRing({ posts }: { posts: FeedPost[] }) {
     };
     const onDown = (e: PointerEvent) => {
       if (e.pointerType === "mouse" && e.button !== 0) return;
+      if ((e.target as Element).closest?.("button")) return;
       dragging = true;
       turnTo = null;
       pendingDx = 0;
@@ -240,6 +252,13 @@ export function InstagramRing({ posts }: { posts: FeedPost[] }) {
       <div
         aria-hidden="true"
         className="absolute bottom-[7%] left-1/2 h-[120px] w-[1100px] -translate-x-1/2 bg-[radial-gradient(closest-side,rgba(31,116,214,0.45),rgba(31,116,214,0))] blur-[24px] max-[899px]:h-[80px] max-[899px]:w-[700px]"
+      />
+      <MotionToggle
+        playing={!paused}
+        onToggle={() => setPaused((p) => !p)}
+        pauseLabel={instagramIntro.pauseLabel}
+        playLabel={instagramIntro.playLabel}
+        className="top-4 right-6 min-[900px]:right-24"
       />
       <ul ref={ringRef} className="ig-ring" style={ringStyle}>
         {slots.map((post, i) => {

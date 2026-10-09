@@ -297,6 +297,9 @@ export const instagramIntro = {
   button: "Follow on Instagram",
   /** Screen-reader name of each tile, followed by the caption when the post has one. */
   postLabel: "Instagram post",
+  /** Screen-reader names of the ring's pause/play button. */
+  pauseLabel: "Pause rotating Instagram posts",
+  playLabel: "Play rotating Instagram posts",
 } as const;
 
 /**
