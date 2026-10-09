@@ -159,7 +159,7 @@ export const mobileBar = {
 /* ---------- Hero ---------- */
 
 export const hero = {
-  eyebrow: "Welding & fabrication · St. Thomas",
+  eyebrow: "Welding & fabrication",
   title: "Seized, stripped or cracked?",
   titleAccent: "Fixed to spec.",
   sub: "Send Kris a photo of the part. You'll get a straight answer and a price, usually the same day.",
@@ -360,5 +360,4 @@ export const contact = {
 export const footer = {
   blurb:
     "Welding and fabrication in Barbados. 20+ years of stronger connections, quality work and lasting solutions.",
-  serving: "Serving St. Thomas, Bridgetown & All of Barbados",
 } as const;

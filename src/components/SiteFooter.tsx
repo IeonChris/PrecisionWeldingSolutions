@@ -57,7 +57,6 @@ export function SiteFooter() {
           <p className="m-0 text-silver">
             © {new Date().getFullYear()} {business.name}. All rights reserved.
           </p>
-          <p className="m-0 tracking-[0.04em] text-blue-light">{footer.serving}</p>
           <p className="m-0 tracking-[0.04em] text-faint-fg">
             Designed &amp; Developed by{" "}
             <a
