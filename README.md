@@ -133,7 +133,7 @@ Copy `.env.local.example` to `.env.local` for local development and add the same
 
 ## SEO
 
-- `src/app/layout.tsx`: title, description, canonical, Open Graph and Twitter tags, and `LocalBusiness` JSON-LD (address, geo from the Google Maps plus code 5C42+G6, Sunday 08:00–13:00 hours, Instagram `sameAs`).
+- `src/app/layout.tsx`: title, description, canonical, Open Graph and Twitter tags, and `LocalBusiness` JSON-LD (address, geo from the Google Maps plus code 5C42+G6, hours of Mon–Sat 08:00–17:00 and Sun 08:00–13:00, Instagram `sameAs`).
 - `src/app/page.tsx`: the services as `ItemList` and `Service` + `OfferCatalog` JSON-LD.
 - `src/app/opengraph-image.tsx`: branded 1200×630 share card (spark photo, logo, headline, WhatsApp number). It renders once at build time on Node and is re-encoded as a ~70 KB JPEG, because WhatsApp silently drops link-preview images over ~300 KB; a photo card as PNG is ~650 KB.
 - `src/app/sitemap.ts`, `src/app/robots.ts`: one URL; `/admin` and `/api/` disallowed.

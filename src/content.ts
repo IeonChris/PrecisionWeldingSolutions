@@ -46,12 +46,21 @@ export const business = {
   /** From the Google Maps plus code 5C42+G6 on the business listing. */
   geo: { latitude: 13.156313, longitude: -59.599438 },
   mapQuery: "Precision Welding Solutions, Reece Rd, Bridgetown, Saint Thomas, Barbados",
+  /** As on the Google Business listing. */
   hours: {
-    days: "Sunday 8 AM – 1 PM",
-    note: "Weekdays by appointment",
-    footer: "Sun 8 AM to 1 PM · Weekdays by appointment",
+    days: "Mon – Sat 8 AM – 5 PM",
+    note: "Sunday 8 AM – 1 PM",
+    footer: "Mon to Sat 8 AM to 5 PM · Sun 8 AM to 1 PM",
     /** Structured-data hours (schema.org openingHoursSpecification); also drives the nav's open/closed status. */
-    schema: [{ dayOfWeek: "Sunday", opens: "08:00", closes: "13:00" }],
+    schema: [
+      { dayOfWeek: "Monday", opens: "08:00", closes: "17:00" },
+      { dayOfWeek: "Tuesday", opens: "08:00", closes: "17:00" },
+      { dayOfWeek: "Wednesday", opens: "08:00", closes: "17:00" },
+      { dayOfWeek: "Thursday", opens: "08:00", closes: "17:00" },
+      { dayOfWeek: "Friday", opens: "08:00", closes: "17:00" },
+      { dayOfWeek: "Saturday", opens: "08:00", closes: "17:00" },
+      { dayOfWeek: "Sunday", opens: "08:00", closes: "13:00" },
+    ],
     /** Barbados is UTC−4 all year (no daylight saving). */
     utcOffsetHours: -4,
   },
@@ -129,8 +138,16 @@ export const footerLinks = [
 
 export const nav = {
   whatsapp: "WhatsApp",
-  /** Open/closed status beside the WhatsApp button (from 1100px). Keep in step with `business.hours`. */
-  status: { open: "Open now · until 1 PM", closed: "Opens Sunday 8 AM" },
+  /**
+   * Open/closed status beside the WhatsApp button (from 1100px), worked out from `business.hours.schema`.
+   * {time} is the closing or opening time ("5 PM"), {day} the weekday of the next opening.
+   */
+  status: {
+    open: "Open now · until {time}",
+    opensToday: "Opens today {time}",
+    opensTomorrow: "Opens tomorrow {time}",
+    opensLater: "Opens {day} {time}",
+  },
 } as const;
 
 /** Phone-only bottom bar (below 832px). */
