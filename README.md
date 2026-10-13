@@ -2,6 +2,8 @@
 
 One-page marketing site for Precision Welding Solutions: welding and fabrication on Reece Rd, St. Thomas, Barbados. The goal of every section is to get a visitor to send Kris a photo of the part on WhatsApp, or to request a quote.
 
+For how the site is built and why (architecture, data flow, component design, SEO, security, operations and the decision log), see [`TDD.md`](TDD.md).
+
 The approved design is the v3 redesign, `design_handoff/Redesign v3.dc.html`. The original handoff (`design_handoff/Precision Welding Solutions.dc.html`, spec in `design_handoff/README.md`) is beside it. Both are kept for reference and are not part of the build.
 
 ## Stack
