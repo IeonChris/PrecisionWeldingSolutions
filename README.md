@@ -133,7 +133,7 @@ Copy `.env.local.example` to `.env.local` for local development and add the same
 - `src/app/layout.tsx`: title, description, canonical, Open Graph and Twitter tags, and `LocalBusiness` JSON-LD (address, geo from the Google Maps plus code 5C42+G6, hours of Mon–Sat 08:00–17:00 and Sun 08:00–13:00, Instagram `sameAs`).
 - `src/app/page.tsx`: the services as `ItemList` and `Service` + `OfferCatalog` JSON-LD.
 - `src/app/opengraph-image.tsx`: branded 1200×630 share card (spark photo, logo, headline, WhatsApp number). It renders once at build time on Node and is re-encoded as a ~70 KB JPEG, because WhatsApp silently drops link-preview images over ~300 KB; a photo card as PNG is ~650 KB.
-- `src/app/sitemap.ts`, `src/app/robots.ts`: one URL; `/admin` and `/api/` disallowed.
+- `src/app/sitemap.ts`, `src/app/robots.ts`: one URL, with Kris's job photos listed as image entries (from `images` and `reasons` in `src/content.ts`) so Google Images can index them; `/admin` and `/api/` disallowed.
 - `GET /api/seo/ping?token=PING_SECRET` (or `Authorization: Bearer …`) pings Google and Bing with the sitemap. Google retired its ping endpoint in 2023 and answers 404, so also submit `/sitemap.xml` once in Google Search Console.
 - Structured-data helpers (`createMetadata`, `createServiceSchema`, `createBreadcrumbSchema`, …) are in `src/lib/metadata.ts`.
 
