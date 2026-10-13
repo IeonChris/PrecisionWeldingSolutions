@@ -1,66 +1,53 @@
 "use client";
 
-import { startTransition, useActionState, useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from "react";
-import { business, contact } from "@/content";
-import { submitQuote, type QuoteState } from "@/app/actions/quote";
+import { useId, useState, type FormEvent, type ReactNode } from "react";
+import { contact } from "@/content";
+import { quoteWhatsappHref } from "@/lib/whatsapp";
 
-const initialState: QuoteState = { status: "idle" };
-
+/**
+ * Quote request that goes straight to Kris on WhatsApp: "Send request" opens a chat with the name,
+ * number and job already typed in. WhatsApp links can't carry files, so the visitor adds the photo
+ * in the chat before sending. Nothing is sent to or stored on the server.
+ */
 export function QuoteForm() {
-  const [state, formAction, pending] = useActionState(submitQuote, initialState);
-  const [sent, setSent] = useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
   const id = useId();
+  const [opened, setOpened] = useState<string | null>(null);
+  const { form } = contact;
 
-  useEffect(() => {
-    if (state.status === "sent") {
-      formRef.current?.reset();
-      setSent(true);
-    } else if (state.status === "error") {
-      formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
-    }
-  }, [state]);
-
-  // Submit through the action without React's automatic form reset, so a failed send keeps
-  // what the visitor typed. The browser has already checked the `required` fields by now.
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    startTransition(() => formAction(data));
+    const value = (name: string) => String(data.get(name) ?? "").trim();
+    const href = quoteWhatsappHref({ name: value("name"), phone: value("phone"), job: value("job") });
+    // A new tab keeps the site open on computers; phones hand the link to the WhatsApp app.
+    const tab = window.open(href, "_blank");
+    if (tab) tab.opener = null;
+    else window.location.href = href;
+    setOpened(href);
   }
 
-  const errors = state.status === "error" ? (state.errors ?? {}) : {};
-  const invalid = (name: keyof NonNullable<QuoteState["errors"]>) =>
-    errors[name] ? { "aria-invalid": true as const, "aria-describedby": `${id}-${name}-error` } : {};
-
-  const label = pending ? contact.form.sending : sent ? contact.form.sent : contact.form.submit;
+  // The browser checks the required fields; the number also needs at least 7 digits.
+  function checkPhone(input: HTMLInputElement) {
+    const digits = (input.value.match(/\d/g) ?? []).length;
+    input.setCustomValidity(input.value && digits < 7 ? form.phoneError : "");
+  }
 
   return (
     <form
-      ref={formRef}
-      action={formAction}
       onSubmit={onSubmit}
-      onInput={() => sent && setSent(false)}
+      onInput={() => opened && setOpened(null)}
       aria-labelledby={`${id}-title`}
       className="flex flex-col gap-4 border border-line bg-panel p-6 sm:p-9"
     >
       <h3 id={`${id}-title`} className="m-0 mb-1 font-display text-[20px] font-bold text-white uppercase">
-        {contact.form.title}
+        {form.title}
       </h3>
 
-      {/* Honeypot: hidden from people, tempting to bots. */}
-      <div className="hp" aria-hidden="true">
-        <label>
-          Company
-          <input type="text" name="company" tabIndex={-1} autoComplete="off" defaultValue="" />
-        </label>
-      </div>
-
       <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
-        <Field label="Name" error={errors.name} errorId={`${id}-name-error`}>
-          <input name="name" type="text" required maxLength={120} autoComplete="name" className="field" {...invalid("name")} />
+        <Field label={form.labels.name}>
+          <input name="name" type="text" required minLength={2} maxLength={120} autoComplete="name" className="field" />
         </Field>
-        <Field label="Phone / WhatsApp" error={errors.phone} errorId={`${id}-phone-error`}>
+        <Field label={form.labels.phone}>
           <input
             name="phone"
             type="tel"
@@ -69,63 +56,48 @@ export function QuoteForm() {
             autoComplete="tel"
             inputMode="tel"
             className="field"
-            {...invalid("phone")}
+            onInput={(e) => checkPhone(e.currentTarget)}
+            onInvalid={(e) => checkPhone(e.currentTarget)}
           />
         </Field>
       </div>
 
-      <Field label="Describe the job" error={errors.details} errorId={`${id}-details-error`}>
+      <Field label={form.labels.job}>
         <textarea
-          name="details"
+          name="job"
           rows={5}
-          maxLength={4000}
-          placeholder={contact.form.descriptionPlaceholder}
+          required
+          maxLength={1500}
+          placeholder={form.descriptionPlaceholder}
           className="field resize-y"
-          {...invalid("details")}
         />
       </Field>
 
-      <button type="submit" disabled={pending} aria-disabled={pending} className="btn btn-primary w-full border-0 p-4 text-[16px] disabled:cursor-wait">
-        {label}
+      <button type="submit" className="btn btn-primary w-full border-0 p-4 text-[16px]">
+        {form.submit}
       </button>
 
-      {state.status === "error" && state.message ? (
-        <p role="alert" className="m-0 border border-[rgba(255,107,107,0.45)] bg-[rgba(255,107,107,0.06)] px-4 py-3 text-[14px] leading-[1.5] text-fg">
-          {state.message}{" "}
-          <a href={business.whatsappUrl} target="_blank" rel="noopener noreferrer" className="font-semibold">
-            WhatsApp {business.phone.display}
-          </a>
-        </p>
-      ) : null}
+      <p className="m-0 text-[13px] text-faint-fg">{form.note}</p>
 
-      <p className="m-0 text-[13px] text-faint-fg">{contact.form.note}</p>
-
-      <p aria-live="polite" className="sr-only">
-        {sent ? contact.form.sent : ""}
+      <p aria-live="polite" className="m-0 text-[14px] leading-[1.5] text-fg empty:hidden">
+        {opened ? (
+          <>
+            {form.opened}{" "}
+            <a href={opened} target="_blank" rel="noopener noreferrer" className="font-semibold max-md:inline-block max-md:py-3">
+              {form.reopen}
+            </a>
+          </>
+        ) : null}
       </p>
     </form>
   );
 }
 
-interface FieldProps {
-  label: string;
-  error?: string;
-  errorId: string;
-  children: ReactNode;
-}
-
-function Field({ label, error, errorId, children }: FieldProps) {
+function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="flex flex-col gap-[6px]">
-      <label className="flex flex-col gap-[6px] text-[13px] tracking-[0.06em] text-dim uppercase">
-        {label}
-        {children}
-      </label>
-      {error ? (
-        <p id={errorId} className="m-0 text-[13px] text-[#ff8a8a]">
-          {error}
-        </p>
-      ) : null}
-    </div>
+    <label className="flex flex-col gap-[6px] text-[13px] tracking-[0.06em] text-dim uppercase">
+      {label}
+      {children}
+    </label>
   );
 }

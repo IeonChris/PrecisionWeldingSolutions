@@ -51,7 +51,7 @@ export function Hero() {
           </a>
         </div>
 
-        <ul className="m-0 mt-12 grid max-w-[860px] list-none grid-cols-[repeat(auto-fit,minmax(min(200px,100%),1fr))] gap-x-8 gap-y-5 border-t border-white/14 p-0 pt-6">
+        <ul className="m-0 mt-12 flex max-w-[1100px] list-none flex-wrap gap-x-14 gap-y-5 border-t border-white/14 p-0 pt-6">
           {hero.proof.map((item) => (
             <li key={item.value}>
               <span className="block font-display text-[22px] leading-[1.1] font-extrabold text-white">{item.value}</span>

@@ -12,3 +12,13 @@ export const photoWhatsappHref = whatsappHref(whatsappMessages.photo);
 export function serviceWhatsappHref(service: string): string {
   return whatsappHref(whatsappMessages.service.replace("{service}", service));
 }
+
+/** The quote form's message with the visitor's details filled in (replacer functions, so a "$" they type stays as typed). */
+export function quoteWhatsappHref(fields: { name: string; phone: string; job: string }): string {
+  return whatsappHref(
+    whatsappMessages.quote
+      .replace("{name}", () => fields.name)
+      .replace("{phone}", () => fields.phone)
+      .replace("{job}", () => fields.job),
+  );
+}

@@ -1,5 +1,5 @@
 import { services, servicesIntro } from "@/content";
-import { photoWhatsappHref, serviceWhatsappHref } from "@/lib/whatsapp";
+import { serviceWhatsappHref } from "@/lib/whatsapp";
 
 export function Services() {
   const [line1, line2] = servicesIntro.titleLines;
@@ -22,19 +22,9 @@ export function Services() {
             {line2}
           </h2>
           <p className="m-0 text-[17px] leading-[1.6] text-pretty text-muted">{servicesIntro.body}</p>
-          <div className="mt-2 flex flex-col gap-[14px] border-t border-line pt-5">
-            <p className="m-0 text-[15px] leading-[1.55] text-silver">
-              <strong className="text-white">{servicesIntro.help.lead}</strong> {servicesIntro.help.body}
-            </p>
-            <a
-              href={photoWhatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-primary self-start px-5 py-[13px] text-[15px]"
-            >
-              {servicesIntro.help.button}
-            </a>
-          </div>
+          <p className="m-0 mt-2 border-t border-line pt-5 text-[15px] leading-[1.55] text-silver">
+            <strong className="text-white">{servicesIntro.help.lead}</strong> {servicesIntro.help.body}
+          </p>
         </div>
 
         <ul className="m-0 list-none border-b border-field p-0">

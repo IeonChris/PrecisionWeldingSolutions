@@ -331,16 +331,6 @@
 
 /* ---------- Misc ---------- */
 
-/* Honeypot: off-screen, never display:none so bots still fill it. */
-.hp {
-  position: absolute;
-  left: -10000px;
-  top: auto;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-}
-
 /* Mobile menu: slides down from under the nav bar. Transform + opacity only. */
 .menu-panel {
   transform-origin: top center;

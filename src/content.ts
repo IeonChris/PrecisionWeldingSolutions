@@ -23,8 +23,8 @@ export const business = {
   description:
     "Welding and fabrication in St. Thomas, Barbados. Thread repairs, seized glow and spark plug removal, aluminum TIG welding, custom fabrication and on-site repairs.",
   owner: "Kris",
-  /** Production domain. NEXT_PUBLIC_SITE_URL overrides it. Placeholder until the domain is chosen. */
-  url: "https://precision-welding-solutions.vercel.app",
+  /** Production domain (registered on Vercel 2026-10-12); the bare domain redirects to www. NEXT_PUBLIC_SITE_URL overrides it. */
+  url: "https://www.precisionweldingsolutionsbb.com",
   phone: {
     display: "+1 (246) 252-5877",
     e164: "+12462525877",
@@ -71,6 +71,8 @@ export const business = {
 export const whatsappMessages = {
   photo: "Hi Kris, here is a photo of the part.",
   service: "Hi Kris, I need help with: {service}. Photo attached.",
+  /** The quote form's message. WhatsApp links can't carry files, so the customer adds the photo in the chat. */
+  quote: "Hi Kris, I'd like a quote.\n\nName: {name}\nNumber: {phone}\nJob: {job}\n\nPhoto attached below 👇",
 } as const;
 
 /* ---------- Photos ---------- */
@@ -168,7 +170,7 @@ export const hero = {
   callCta: "Call",
   proof: [
     { value: "20+ years", label: "Welding & fabrication in Barbados" },
-    { value: "Steel · SS · Alu", label: "TIG welding, clean full-penetration beads" },
+    { value: "Steel, stainless & aluminum", label: "TIG welding, clean full-penetration beads" },
     { value: "Island-wide", label: "On-site repairs by arrangement" },
   ],
 } as const;
@@ -182,7 +184,6 @@ export const servicesIntro = {
   help: {
     lead: "Not sure what you need?",
     body: "Send a photo of the part. You'll get a straight answer and a price.",
-    button: "Message on WhatsApp",
   },
   /** Read out after each service row by screen readers. */
   rowAction: "Ask Kris on WhatsApp",
@@ -238,7 +239,6 @@ export const about = {
     "Photos quoted over WhatsApp",
   ],
   nameplate: { name: "Kris", role: "Owner · Welder" },
-  cta: "Talk to Kris",
 } as const;
 
 /* ---------- Why us ---------- */
@@ -296,7 +296,7 @@ export const reasons: {
   {
     num: "04",
     title: "Local, island-wide",
-    desc: "Based in St. Thomas, five minutes from Bridgetown. Mobile service anywhere in Barbados.",
+    desc: "Based in St. Thomas, with mobile service anywhere in Barbados.",
     chip: "On-site · steel I-beam",
     image: {
       src: "/images/ibeam-weld.jpg",
@@ -345,13 +345,16 @@ export const contact = {
   title: "Find the shop",
   phoneNote: "Call or WhatsApp",
   mapTitle: "Map: Precision Welding Solutions on Reece Rd, St. Thomas",
+  /** Opens WhatsApp to Kris with `whatsappMessages.quote` filled in from these fields. */
   form: {
     title: "Request a quote",
+    labels: { name: "Name", phone: "Phone / WhatsApp", job: "Describe the job" },
     descriptionPlaceholder: "What is it, what's wrong, material if you know it…",
+    phoneError: "Enter a phone or WhatsApp number with at least 7 digits.",
     submit: "Send request",
-    sending: "Sending…",
-    sent: "Sent. Kris will be in touch",
-    note: "Photos help. Attach them on WhatsApp after you send this.",
+    note: "Opens WhatsApp with your details filled in. Add a photo of the part in the chat, then hit send.",
+    opened: "WhatsApp is open with your request. Add your photo there and hit send.",
+    reopen: "Didn't open? Tap here",
   },
 } as const;
 

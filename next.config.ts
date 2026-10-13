@@ -1,5 +1,25 @@
 import type { NextConfig } from "next";
 
+/*
+ * Content-Security-Policy. The page is static (ISR) and Next.js adds small inline scripts to it, so
+ * scripts allow 'unsafe-inline' from this origin only (a nonce would force every request to render on
+ * the server). Outside sources: the Google Maps embed, and Instagram images (Behold, or Meta's CDNs).
+ */
+const contentSecurityPolicy = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""}`,
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob: https://behold.pictures https://*.cdninstagram.com https://*.fbcdn.net",
+  "font-src 'self'",
+  "media-src 'self'",
+  "connect-src 'self'",
+  "frame-src https://www.google.com https://maps.google.com",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+].join("; ");
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
@@ -29,6 +49,7 @@ const nextConfig: NextConfig = {
       {
         source: "/(.*)",
         headers: [
+          { key: "Content-Security-Policy", value: contentSecurityPolicy },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "DENY" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },

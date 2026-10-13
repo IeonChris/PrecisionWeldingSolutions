@@ -38,7 +38,7 @@ export function About() {
               {p}
             </p>
           ))}
-          <ul className="m-0 mb-9 grid list-none grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-6 gap-y-3 p-0">
+          <ul className="m-0 grid list-none grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-6 gap-y-3 p-0">
             {about.points.map((point) => (
               <li key={point} className="flex items-start gap-3 font-medium text-fg">
                 <span aria-hidden="true" className="hex mt-[3px] h-[18px] w-[18px]" />
@@ -46,9 +46,6 @@ export function About() {
               </li>
             ))}
           </ul>
-          <a href="#contact" className="btn btn-outline px-6 py-[14px] text-[16px]">
-            {about.cta}
-          </a>
         </div>
       </div>
     </section>

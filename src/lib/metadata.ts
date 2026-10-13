@@ -7,14 +7,12 @@ function normaliseUrl(raw: string): string {
 }
 
 /**
- * Canonical origin. NEXT_PUBLIC_SITE_URL wins; on Vercel the production (or preview) URL is
- * used; `next dev` uses localhost; anything else falls back to `business.url`.
+ * Canonical origin. NEXT_PUBLIC_SITE_URL wins; production uses the real domain (`business.url`);
+ * Vercel previews use their own URL; `next dev` uses localhost; anything else falls back to `business.url`.
  */
 function resolveBaseUrl(): string {
   if (process.env.NEXT_PUBLIC_SITE_URL) return normaliseUrl(process.env.NEXT_PUBLIC_SITE_URL);
-  if (process.env.VERCEL_ENV === "production" && process.env.VERCEL_PROJECT_PRODUCTION_URL) {
-    return normaliseUrl(process.env.VERCEL_PROJECT_PRODUCTION_URL);
-  }
+  if (process.env.VERCEL_ENV === "production") return normaliseUrl(business.url);
   if (process.env.VERCEL_URL) return normaliseUrl(process.env.VERCEL_URL);
   if (process.env.NODE_ENV === "development") return "http://localhost:3000";
   return normaliseUrl(business.url);

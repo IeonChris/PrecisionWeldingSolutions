@@ -12,7 +12,7 @@ The approved design is the v3 redesign, `design_handoff/Redesign v3.dc.html`. Th
 | Styling | Tailwind CSS v4. The design tokens in `src/app/globals.css` are the only colours; Tailwind's default palette is disabled |
 | Fonts | Montserrat (headings) and Open Sans (body) from Google Fonts through `next/font`, self-hosted at build time with `display: swap` |
 | Page | `/` is static and regenerated at most hourly (ISR) so the Instagram ring stays fresh |
-| Form | Server action (`src/app/actions/quote.ts`): zod validation, honeypot, per-IP rate limit, email to the owner through Resend with a React Email template |
+| Form | Client-side: opens WhatsApp to Kris with the request typed in (no server, no email) |
 | Hosting | Vercel |
 
 ## Commands
@@ -103,19 +103,19 @@ If both variables are set, Behold wins.
 
 ## Quote form
 
-The form has three fields: Name and Phone / WhatsApp (both required) and Describe the job. It posts to a server action without reloading the page. The browser enforces the required fields, the server validates again, drops bot submissions caught by a hidden honeypot field, limits each IP to five requests an hour, and emails the request to the owner (subject "Quote request: {name}"). On success the button reads **"Sent. Kris will be in touch"**.
+The form (`src/components/QuoteForm.tsx`) sends the request to Kris on WhatsApp. It has three required fields: Name, Phone / WhatsApp (at least 7 digits) and Describe the job. **Send request** opens a WhatsApp chat with Kris (a new tab on computers, the app on phones) with this already typed in, from `whatsappMessages.quote` in `src/content.ts`:
 
-The email (`src/emails/BusinessNotification.tsx`, React Email) shows the customer's details and the job, with a **Reply on WhatsApp** button that opens a chat with the customer's number. Seven-digit local numbers get the +1 246 prefix automatically.
+```
+Hi Kris, I'd like a quote.
 
-Setup:
+Name: …
+Number: …
+Job: …
 
-1. Create a [Resend](https://resend.com) account and an API key → `RESEND_API_KEY`.
-2. Set `QUOTE_TO` to the address that should receive requests (comma-separate several).
-3. Verify the sending domain in Resend and set `EMAIL_FROM`, e.g. `Precision Welding Solutions <quotes@yourdomain.com>`. Until the domain is verified, leave `EMAIL_FROM` unset: Resend's sandbox sender only delivers to the email address that owns the Resend account.
+Photo attached below 👇
+```
 
-In local development without these variables, a submitted request is printed to the terminal and the form still shows the success state. In production, missing configuration shows the visitor an error with the WhatsApp link instead.
-
-The form does not ask for an email address (the design doesn't), so there is no customer confirmation email.
+WhatsApp links can carry text but not files, so the visitor adds the photo in the chat and sends it from their own WhatsApp; the note under the button tells them to. Nothing goes through the server and nothing is stored, so there is no email setup and no spam to filter: a request only reaches Kris if the visitor sends it.
 
 ## Environment variables
 
@@ -123,10 +123,7 @@ Copy `.env.local.example` to `.env.local` for local development and add the same
 
 | Variable | Needed for | Notes |
 | --- | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | Canonical URL, sitemap, robots, JSON-LD, OG image | Full URL, no trailing slash. On Vercel it can stay unset until the domain is live (the Vercel production URL is used) |
-| `RESEND_API_KEY` | Quote emails | From resend.com |
-| `QUOTE_TO` | Quote emails | Recipient address(es) |
-| `EMAIL_FROM` | Quote emails | Sender on a Resend-verified domain. Unset = sandbox sender |
+| `NEXT_PUBLIC_SITE_URL` | Canonical URL, sitemap, robots, JSON-LD, OG image | Optional override, full URL, no trailing slash. Unset, production uses `business.url` (`https://www.precisionweldingsolutionsbb.com`) and previews their own URL |
 | `INSTAGRAM_FEED_URL` | Instagram ring (Option A) | Behold JSON feed URL |
 | `INSTAGRAM_ACCESS_TOKEN` | Instagram ring (Option B) | Long-lived token, refreshed every < 60 days |
 | `PING_SECRET` | `/api/seo/ping` | Any long random string. `.env.local` already has one for local use |
@@ -145,8 +142,8 @@ Copy `.env.local.example` to `.env.local` for local development and add the same
 1. Push the project to a GitHub repository.
 2. In Vercel, **Add New → Project**, import the repository. Framework preset: Next.js; no overrides.
 3. Add the environment variables above.
-4. Deploy. Add the client's domain under **Settings → Domains**, then set `NEXT_PUBLIC_SITE_URL` to it and redeploy.
-5. Submit `https://<domain>/sitemap.xml` in Google Search Console and Bing Webmaster Tools.
+4. Deploy. Under **Settings → Domains**, add `precisionweldingsolutionsbb.com` (registered on Vercel, so DNS is automatic) with **Redirect apex domains to www** ticked, connected to Production. The code already uses `https://www.precisionweldingsolutionsbb.com` as the canonical address (`business.url`).
+5. Submit `https://www.precisionweldingsolutionsbb.com/sitemap.xml` in Google Search Console and Bing Webmaster Tools.
 6. Check the live site in [PageSpeed Insights](https://pagespeed.web.dev).
 
 ### Building on an exFAT drive
