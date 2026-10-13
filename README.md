@@ -137,6 +137,10 @@ Copy `.env.local.example` to `.env.local` for local development and add the same
 - `GET /api/seo/ping?token=PING_SECRET` (or `Authorization: Bearer …`) pings Google and Bing with the sitemap. Google retired its ping endpoint in 2023 and answers 404, so also submit `/sitemap.xml` once in Google Search Console.
 - Structured-data helpers (`createMetadata`, `createServiceSchema`, `createBreadcrumbSchema`, …) are in `src/lib/metadata.ts`.
 
+## Visitor stats
+
+Vercel Web Analytics (`<Analytics />` in `src/app/layout.tsx`) records page views without cookies, so no consent banner is needed. See them under the project's **Analytics** tab: visitors, referrers (Google, Instagram, WhatsApp shares), countries and devices. It has to be switched on once in that tab. The free Hobby plan covers 50,000 events a month and keeps a month of history; counting clicks such as the WhatsApp buttons (custom events) needs Pro. Locally the script 404s, since `/_vercel/insights` only exists on Vercel.
+
 ## Deployment (Vercel)
 
 1. Push the project to a GitHub repository.

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Montserrat, Open_Sans } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { business } from "@/content";
 import { createLocalBusinessSchema, createMetadata } from "@/lib/metadata";
 import { JsonLd } from "@/components/JsonLd";
@@ -49,7 +50,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <JsonLd data={createLocalBusinessSchema()} />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        {/* Vercel Web Analytics: cookieless page views, served from this domain (/_vercel/insights). */}
+        <Analytics />
+      </body>
     </html>
   );
 }
